@@ -1,2 +1,2 @@
 @ECHO OFF
-python -m Ultros
+python -m ultros

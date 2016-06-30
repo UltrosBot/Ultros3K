@@ -1,2 +1,2 @@
 #! /bin/sh
-python -m Ultros
+python -m ultros
