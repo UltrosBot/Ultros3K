@@ -8,12 +8,15 @@ This is the base module. It contains all of Ultros' core code and utils.
 Modules
 =======
 
+.. currentmodule:: ultros
+
 .. autosummary::
     :toctree: api
 
-    ultros.events
-    ultros.storage
-    ultros.system
+    events
+    rules
+    storage
+    system
 """
 
 __author__ = 'Gareth Coles'
