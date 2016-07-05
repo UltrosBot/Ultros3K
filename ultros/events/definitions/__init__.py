@@ -6,10 +6,12 @@ Definitions of actual event objects
 Submodules
 ==========
 
+.. currentmodule:: ultros.events.definitions
+
 .. autosummary::
     :toctree: definitions
 
-    ultros.events.definitions.general
+    general
 """
 
 __author__ = 'Gareth Coles'
