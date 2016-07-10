@@ -31,6 +31,7 @@ class Event:
     identifiers = None  # List of identifiers that apply to this event
 
     caller = None  # The object responsible for creating the event
+    cancelled = False  # Whether the event has been cancelled
 
     def __init__(self, caller):
         self.caller = caller
