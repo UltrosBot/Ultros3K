@@ -6,11 +6,12 @@ General event types and base classes
 Members
 =======
 """
+from ultros.events.definitions.meta import EventMeta
 
 __author__ = 'Gareth Coles'
 
 
-class Event:
+class Event(metaclass=EventMeta):
     """
     An event. Represents something that happened.
 
@@ -32,10 +33,6 @@ class Event:
 
     cancelled = False  # Whether the event has been cancelled
 
-    def __init__(self):
-        self.identifiers = {"Event"}
-        self.identifiers.add(self.identifier)
-
 
 class PluginEvent(Event):
     """
@@ -50,7 +47,6 @@ class PluginEvent(Event):
         super().__init__()
 
         self.plugin = plugin
-        self.identifiers.add("PluginEvent")
 
 
 class ProtocolEvent(Event):
@@ -66,4 +62,3 @@ class ProtocolEvent(Event):
         super().__init__()
 
         self.protocol = protocol
-        self.identifiers.add("ProtocolEvent")
