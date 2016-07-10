@@ -70,6 +70,7 @@ class EventManager:
         }
 
         self.registered[identifier].append(handler)
+        self.registered[identifier].sort(key=itemgetter("priority"))
 
     def remove_handler(self,
                        func: Callable[..., None],
@@ -97,27 +98,23 @@ class EventManager:
 
     async def fire_event(self, event: Event) -> Event:
         for identifier in event.identifiers:
-            if identifier in self.registered:
-                handlers = sorted(
-                    self.registered[identifier], key=itemgetter("priority")
-                )
+            handlers = self.registered.get(identifier, [])
+            for handler in handlers:
+                if event.cancelled and not handler["cancelled"]:
+                    continue
+                if handler["filter"] and not handler["filter"](event):
+                    continue
 
-                for handler in handlers:
-                    if event.cancelled and not handler["cancelled"]:
-                        continue
-                    if handler["filter"] and not handler["filter"](event):
-                        continue
+                func = handler["callable"]
+                args = handler["args"]
+                kwargs = handler["kwargs"]
 
-                    func = handler["callable"]
-                    args = handler["args"]
-                    kwargs = handler["kwargs"]
-
-                    try:
-                        if iscoroutinefunction(func):
-                            await func(event, *args, **kwargs)
-                        else:
-                            func(event, *args, **kwargs)
-                    except Exception as e:
-                        # TODO: Logging
-                        pass
+                try:
+                    if iscoroutinefunction(func):
+                        await func(event, *args, **kwargs)
+                    else:
+                        func(event, *args, **kwargs)
+                except Exception as e:
+                    # TODO: Logging
+                    pass
         return event
