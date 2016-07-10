@@ -28,17 +28,13 @@ class Event:
     """
 
     identifier = "Event"  # Unique event type identifier
-    identifiers = None  # List of identifiers that apply to this event
+    identifiers = None  # Set of identifiers that apply to this event
 
-    caller = None  # The object responsible for creating the event
     cancelled = False  # Whether the event has been cancelled
 
-    def __init__(self, caller):
-        self.caller = caller
-        self.identifiers = ["Event"]
-
-        if self.identifier not in self.identifiers:
-            self.identifiers.append(self.identifier)
+    def __init__(self):
+        self.identifiers = {"Event"}
+        self.identifiers.add(self.identifier)
 
 
 class PluginEvent(Event):
@@ -50,13 +46,11 @@ class PluginEvent(Event):
 
     identifier = "PluginEvent"
 
-    def __init__(self, caller):
-        super().__init__(caller)
+    def __init__(self, plugin):  # TODO: Typing
+        super().__init__()
 
-        self.identifiers.append("PluginEvent")
-
-        if self.identifier not in self.identifiers:
-            self.identifiers.append(self.identifier)
+        self.plugin = plugin
+        self.identifiers.add("PluginEvent")
 
 
 class ProtocolEvent(Event):
@@ -68,9 +62,8 @@ class ProtocolEvent(Event):
 
     identifier = "ProtocolEvent"
 
-    def __init__(self, caller):
-        super().__init__(caller)
-        self.identifiers.append("ProtocolEvent")
+    def __init__(self, protocol):  # TODO: Typing
+        super().__init__()
 
-        if self.identifier not in self.identifiers:
-            self.identifiers.append(self.identifier)
+        self.protocol = protocol
+        self.identifiers.add("ProtocolEvent")

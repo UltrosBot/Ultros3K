@@ -1,12 +1,13 @@
 # coding=utf-8
-from enum import IntEnum
+from enum import IntEnum, unique
 
 __author__ = 'Gareth Coles'
 
 
+@unique
 class EventPriority(IntEnum):
-    HIGHEST = 2
-    HIGH = 1
+    HIGHEST = 100
+    HIGH = 50
     NORMAL = 0
-    LOW = -1
-    LOWEST = -2
+    LOW = -50
+    LOWEST = -100

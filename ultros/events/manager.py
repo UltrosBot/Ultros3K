@@ -59,27 +59,28 @@ class EventManager:
         self.registered[identifier].append(handler)
 
     async def run_callback(self, event: Event) -> Event:
-        if event.identifier in self.registered:
-            handlers = sorted(
-                self.registered[event.identifier], key=itemgetter("priority")
-            )
+        for identifier in event.identifiers:
+            if identifier in self.registered:
+                handlers = sorted(
+                    self.registered[identifier], key=itemgetter("priority")
+                )
 
-            for handler in handlers:
-                if event.cancelled and not handler["cancelled"]:
-                    continue
-                if handler["filter"] and not handler["filter"](event):
-                    continue
+                for handler in handlers:
+                    if event.cancelled and not handler["cancelled"]:
+                        continue
+                    if handler["filter"] and not handler["filter"](event):
+                        continue
 
-                func = handler["callable"]
-                args = handler["args"]
-                kwargs = handler["kwargs"]
+                    func = handler["callable"]
+                    args = handler["args"]
+                    kwargs = handler["kwargs"]
 
-                try:
-                    if iscoroutinefunction(func):
-                        await func(event, *args, **kwargs)
-                    else:
-                        func(event, *args, **kwargs)
-                except Exception as e:
-                    # TODO: Logging
-                    pass
+                    try:
+                        if iscoroutinefunction(func):
+                            await func(event, *args, **kwargs)
+                        else:
+                            func(event, *args, **kwargs)
+                    except Exception as e:
+                        # TODO: Logging
+                        pass
         return event
