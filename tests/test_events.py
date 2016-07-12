@@ -31,11 +31,11 @@ class TestRules(TestCase):
         fired = False
         other_fired = False
 
-        def handler(event):
+        def handler(_):
             nonlocal fired
             fired = True
 
-        def other_handler(event):
+        def other_handler(_):
             nonlocal other_fired
             other_fired = True
 
@@ -53,7 +53,7 @@ class TestRules(TestCase):
         """
         fired = []
 
-        def handler(event, order):
+        def handler(_, order):
             fired.append(order)
 
         handler_1 = partial(handler, order=1)
@@ -80,11 +80,11 @@ class TestRules(TestCase):
         fired = False
         other_fired = False
 
-        def handler(event):
+        def handler(_):
             nonlocal fired
             fired = True
 
-        def other_handler(event):
+        def other_handler(_):
             nonlocal other_fired
             other_fired = True
 
@@ -102,18 +102,18 @@ class TestRules(TestCase):
         fired = False
         other_fired = False
 
-        def handler(event):
+        def handler(_):
             nonlocal fired
             fired = True
 
-        def other_handler(event):
+        def other_handler(_):
             nonlocal other_fired
             other_fired = True
 
-        def true(event):
+        def true(_):
             return True
 
-        def false(event):
+        def false(_):
             return False
 
         self.manager.add_handler(self, Event, handler)
@@ -130,7 +130,7 @@ class TestRules(TestCase):
         BAR = "fghij"
         fired = None
 
-        def handler(event, foo, *, bar):
+        def handler(_, foo, *, bar):
             nonlocal fired
             fired = [foo, bar]
 
@@ -153,7 +153,7 @@ class TestRules(TestCase):
     def test_remove(self):
         fired = False
 
-        def handler(event):
+        def handler(_):
             nonlocal fired
             fired = True
 
@@ -167,11 +167,11 @@ class TestRules(TestCase):
         fired = False
         other_fired = False
 
-        def handler(event):
+        def handler(_):
             nonlocal fired
             fired = True
 
-        def other_handler(event):
+        def other_handler(_):
             nonlocal other_fired
             other_fired = True
 
@@ -187,11 +187,11 @@ class TestRules(TestCase):
         fired = False
         other_fired = False
 
-        def handler(event):
+        def handler(_):
             nonlocal fired
             fired = True
 
-        def other_handler(event):
+        def other_handler(_):
             nonlocal other_fired
             other_fired = True
 
@@ -216,13 +216,13 @@ class TestRules(TestCase):
         fired = []
         other_fired = False
 
-        def handler(event, name):
+        def handler(_, name):
             fired.append(name)
 
         event_handler = partial(handler, name="Event")
         subevent_handler = partial(handler, name="SubEvent")
 
-        def other_handler(event):
+        def other_handler(_):
             nonlocal other_fired
             other_fired = True
 

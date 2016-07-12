@@ -109,12 +109,6 @@ class TestRules(TestCase):
         Bundled predicates
         """
 
-        def transformer_continue():
-            return TransformerResult.CONTINUE
-
-        def transformer_return():
-            return TransformerResult.RETURN
-
         def transformer_return_value(value):
             def inner():
                 return TransformerResult.RETURN, value
