@@ -74,7 +74,7 @@ class EventManager:
 
     def remove_handler(self,
                        func: Callable[..., None],
-                       identifier: Union[str, Event]=None,
+                       identifier: Union[str, Event] = None,
                        priority: EventPriority = None):
         if identifier is None:
             handler_dict = self.registered

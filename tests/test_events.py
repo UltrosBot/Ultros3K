@@ -31,11 +31,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -53,7 +53,7 @@ class TestEvents(TestCase):
         """
         fired = []
 
-        def handler(_, order):
+        def handler(event, order):
             fired.append(order)
 
         handler_1 = partial(handler, order=1)
@@ -80,11 +80,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -102,18 +102,18 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
-        def true(_):
+        def true(event):
             return True
 
-        def false(_):
+        def false(event):
             return False
 
         self.manager.add_handler(self, Event, handler)
@@ -130,7 +130,7 @@ class TestEvents(TestCase):
         BAR = "fghij"
         fired = None
 
-        def handler(_, foo, *, bar):
+        def handler(event, foo, *, bar):
             nonlocal fired
             fired = [foo, bar]
 
@@ -153,7 +153,7 @@ class TestEvents(TestCase):
     def test_remove(self):
         fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
@@ -167,11 +167,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -187,11 +187,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -216,13 +216,13 @@ class TestEvents(TestCase):
         fired = []
         other_fired = False
 
-        def handler(_, name):
+        def handler(event, name):
             fired.append(name)
 
         event_handler = partial(handler, name="Event")
         subevent_handler = partial(handler, name="SubEvent")
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 

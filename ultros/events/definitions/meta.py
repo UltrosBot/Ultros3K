@@ -8,8 +8,8 @@ class EventMeta(type):
     creation.
     """
 
-    def __new__(mcs, name, bases, class_dict):
-        event_cls = super().__new__(mcs, name, bases, class_dict)
+    def __new__(metacls, name, bases, class_dict):
+        event_cls = super().__new__(metacls, name, bases, class_dict)
         identifiers = []
         event_cls.identifiers = identifiers
         for base in reversed(event_cls.__mro__):
