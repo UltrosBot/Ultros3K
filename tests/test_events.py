@@ -5,6 +5,7 @@ from functools import partial
 
 from ultros.events.constants import EventPriority
 from ultros.events.definitions.general import Event
+from ultros.events.definitions.meta import EventMeta
 from ultros.events.manager import EventManager
 
 from nose.tools import assert_equal, assert_true, assert_false
@@ -47,6 +48,22 @@ class TestEvents(TestCase):
 
         assert_true(fired, "Event handler didn't fire")
         assert_false(other_fired, "Other event handler should not have fired")
+
+    def test_async(self):
+        """
+        Events system async handler
+        """
+        fired = False
+
+        async def handler(event):
+            nonlocal fired
+            fired = True
+
+        self.manager.add_handler(self, Event, handler)
+
+        self.loop.run_until_complete(self.manager.fire_event(Event()))
+
+        assert_true(fired, "Event handler didn't fire")
 
     def test_priority(self):
         """
@@ -246,7 +263,7 @@ class TestEvents(TestCase):
         assert_equal(fired, ["Event", "SubEvent"], "Removed handler fired")
         assert_false(other_fired, "Other handler shouldn't have fired")
 
-    def test_event_metaclass(self):
+    def test_event_metaclass_identifiers(self):
         """
         Test Event's metaclass identifier[s] creation.
         """
@@ -255,19 +272,23 @@ class TestEvents(TestCase):
 
         # To avoid this test breaking by accident if the test itself is renamed
         # or moved, don't hard-code its names or location.
-        base_identifier = "%s.%s.%s" % (self.__class__.__module__,
-                                        self.__class__.__qualname__,
-                                        inspect.stack()[0].function)
+        base_identifier = "%s.%s.%s.<locals>" % (self.__class__.__module__,
+                                                 self.__class__.__qualname__,
+                                                 inspect.stack()[0].function)
 
-        class FooEvent(Event):
+        class BaseEvent(metaclass=EventMeta):
+            pass
+
+        class FooEvent(BaseEvent):
             identifier = "foo"
 
-        class BarEvent(Event):
+        class BarEvent(BaseEvent):
             pass
 
         class QuxEvent(FooEvent):
             pass
 
+        # Check identifier
         assert_equal(
             Event.identifier,
             "ultros.events.definitions.general.Event"
@@ -275,22 +296,27 @@ class TestEvents(TestCase):
         assert_equal(FooEvent.identifier, "foo")
         assert_equal(
             BarEvent.identifier,
-            base_identifier + ".<locals>.BarEvent"
+            base_identifier + ".BarEvent"
         )
         assert_equal(
             QuxEvent.identifier,
-            base_identifier + ".<locals>.QuxEvent"
+            base_identifier + ".QuxEvent"
         )
+
+        # Check identifiers
+        assert_equal(Event.identifiers, [
+            "ultros.events.definitions.general.Event"
+        ])
         assert_equal(FooEvent.identifiers, [
-            "ultros.events.definitions.general.Event",
+            base_identifier + ".BaseEvent",
             "foo"
         ])
         assert_equal(BarEvent.identifiers, [
-            "ultros.events.definitions.general.Event",
-            base_identifier + ".<locals>.BarEvent"
+            base_identifier + ".BaseEvent",
+            base_identifier + ".BarEvent"
         ])
         assert_equal(QuxEvent.identifiers, [
-            "ultros.events.definitions.general.Event",
+            base_identifier + ".BaseEvent",
             "foo",
-            base_identifier + ".<locals>.QuxEvent"
+            base_identifier + ".QuxEvent"
         ])

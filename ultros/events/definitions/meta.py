@@ -16,18 +16,15 @@ class EventMeta(type):
         event_cls = super().__new__(metacls, name, bases, class_dict)
         identifiers = []
         event_cls.identifiers = identifiers
-        # Skip object and event_cls
-        # We have to grab event_cls identifier from class_dict to avoid getting
-        # an inherited one.
-        for base in reversed(event_cls.__mro__[1:-1]):
+        # Skip event_cls
+        for base in reversed(event_cls.__mro__[1:]):
             try:
-                identifier = base.identifier
+                identifiers.append(base.identifier)
             except AttributeError:
-                identifier = "%s.%s" % (base.__module__,
-                                        base.__qualname__)
-            identifiers.append(identifier)
+                # Not an Event
+                continue
 
-        # Get event_cls identifier
+        # Get or create event_cls identifier
         identifier = class_dict.get("identifier", None)
         if identifier is None:
             identifier = "%s.%s" % (event_cls.__module__,
