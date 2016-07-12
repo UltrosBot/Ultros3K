@@ -1,5 +1,6 @@
 # coding=utf-8
 import asyncio
+import inspect
 from functools import partial
 
 from ultros.events.constants import EventPriority
@@ -227,13 +228,13 @@ class TestEvents(TestCase):
             other_fired = True
 
         class SubEvent(Event):
-            identifier = "SubEvent"
+            pass
 
         class MoreSubEvent(SubEvent):
-            identifier = "MoreSubEvent"
+            pass
 
         class DifferentEvent(Event):
-            identifier = "DifferentEvent"
+            pass
 
         self.manager.add_handler(self, Event, event_handler)
         self.manager.add_handler(self, SubEvent, subevent_handler)
@@ -244,3 +245,52 @@ class TestEvents(TestCase):
 
         assert_equal(fired, ["Event", "SubEvent"], "Removed handler fired")
         assert_false(other_fired, "Other handler shouldn't have fired")
+
+    def test_event_metaclass(self):
+        """
+        Test Event's metaclass identifier[s] creation.
+        """
+        # These end up with pretty unwieldy and ugly generated names, but only
+        # because they're created inside a function inside a class.
+
+        # To avoid this test breaking by accident if the test itself is renamed
+        # or moved, don't hard-code its names or location.
+        base_identifier = "%s.%s.%s" % (self.__class__.__module__,
+                                        self.__class__.__qualname__,
+                                        inspect.stack()[0].function)
+
+        class FooEvent(Event):
+            identifier = "foo"
+
+        class BarEvent(Event):
+            pass
+
+        class QuxEvent(FooEvent):
+            pass
+
+        assert_equal(
+            Event.identifier,
+            "ultros.events.definitions.general.Event"
+        )
+        assert_equal(FooEvent.identifier, "foo")
+        assert_equal(
+            BarEvent.identifier,
+            base_identifier + ".<locals>.BarEvent"
+        )
+        assert_equal(
+            QuxEvent.identifier,
+            base_identifier + ".<locals>.QuxEvent"
+        )
+        assert_equal(FooEvent.identifiers, [
+            "ultros.events.definitions.general.Event",
+            "foo"
+        ])
+        assert_equal(BarEvent.identifiers, [
+            "ultros.events.definitions.general.Event",
+            base_identifier + ".<locals>.BarEvent"
+        ])
+        assert_equal(QuxEvent.identifiers, [
+            "ultros.events.definitions.general.Event",
+            "foo",
+            base_identifier + ".<locals>.QuxEvent"
+        ])
