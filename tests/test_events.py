@@ -13,7 +13,7 @@ from unittest import TestCase
 __author__ = "Sean"
 
 
-class TestRules(TestCase):
+class TestEvents(TestCase):
     def setUp(self):
         self.manager = EventManager()
 
