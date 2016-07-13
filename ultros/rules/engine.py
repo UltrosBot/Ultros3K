@@ -25,7 +25,7 @@ class RulesEngine:
     This engine does have the concept of sets of rules, so you can use the
     same instance with more than one group of rules.
     """
-    
+
     # TODO: Value-editing transformers
 
     predicates = {}
