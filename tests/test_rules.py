@@ -24,13 +24,10 @@ class TestRules(TestCase):
         asyncio.set_event_loop(None)
 
     def tearDown(self):
-        for rule_set in list(self.engine.rule_sets.keys()):
-            self.engine.del_rule_set(rule_set)
-
-        self.engine = None
-        self.loop = None
-        self.rule_set = None
-        self.value = None
+        del self.engine
+        del self.loop
+        del self.rule_set
+        del self.value
 
     async def do_run(self):
         return await self.engine.run(self.rule_set, self.value)

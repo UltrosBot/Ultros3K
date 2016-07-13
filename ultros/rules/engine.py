@@ -26,10 +26,10 @@ class RulesEngine:
     same instance with more than one group of rules.
     """
 
-    # TODO: Value-editing transformers
+    rule_sets = None
 
-    predicates = {}
-    rule_sets = {}
+    def __init__(self):
+        self.rule_sets = {}
 
     async def run(self, rule_set: str, value: object) -> object:
         """
