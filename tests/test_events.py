@@ -1,9 +1,11 @@
 # coding=utf-8
 import asyncio
+import inspect
 from functools import partial
 
 from ultros.events.constants import EventPriority
 from ultros.events.definitions.general import Event
+from ultros.events.definitions.meta import EventMeta
 from ultros.events.manager import EventManager
 
 from nose.tools import assert_equal, assert_true, assert_false
@@ -31,11 +33,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -47,13 +49,29 @@ class TestEvents(TestCase):
         assert_true(fired, "Event handler didn't fire")
         assert_false(other_fired, "Other event handler should not have fired")
 
+    def test_async(self):
+        """
+        Events system async handler
+        """
+        fired = False
+
+        async def handler(event):
+            nonlocal fired
+            fired = True
+
+        self.manager.add_handler(self, Event, handler)
+
+        self.loop.run_until_complete(self.manager.fire_event(Event()))
+
+        assert_true(fired, "Event handler didn't fire")
+
     def test_priority(self):
         """
         Events system priorities
         """
         fired = []
 
-        def handler(_, order):
+        def handler(event, order):
             fired.append(order)
 
         handler_1 = partial(handler, order=1)
@@ -80,11 +98,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -102,18 +120,18 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
-        def true(_):
+        def true(event):
             return True
 
-        def false(_):
+        def false(event):
             return False
 
         self.manager.add_handler(self, Event, handler)
@@ -130,7 +148,7 @@ class TestEvents(TestCase):
         BAR = "fghij"
         fired = None
 
-        def handler(_, foo, *, bar):
+        def handler(event, foo, *, bar):
             nonlocal fired
             fired = [foo, bar]
 
@@ -153,7 +171,7 @@ class TestEvents(TestCase):
     def test_remove(self):
         fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
@@ -167,11 +185,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -187,11 +205,11 @@ class TestEvents(TestCase):
         fired = False
         other_fired = False
 
-        def handler(_):
+        def handler(event):
             nonlocal fired
             fired = True
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
@@ -216,24 +234,24 @@ class TestEvents(TestCase):
         fired = []
         other_fired = False
 
-        def handler(_, name):
+        def handler(event, name):
             fired.append(name)
 
         event_handler = partial(handler, name="Event")
         subevent_handler = partial(handler, name="SubEvent")
 
-        def other_handler(_):
+        def other_handler(event):
             nonlocal other_fired
             other_fired = True
 
         class SubEvent(Event):
-            identifier = "SubEvent"
+            pass
 
         class MoreSubEvent(SubEvent):
-            identifier = "MoreSubEvent"
+            pass
 
         class DifferentEvent(Event):
-            identifier = "DifferentEvent"
+            pass
 
         self.manager.add_handler(self, Event, event_handler)
         self.manager.add_handler(self, SubEvent, subevent_handler)
@@ -244,3 +262,61 @@ class TestEvents(TestCase):
 
         assert_equal(fired, ["Event", "SubEvent"], "Removed handler fired")
         assert_false(other_fired, "Other handler shouldn't have fired")
+
+    def test_event_metaclass_identifiers(self):
+        """
+        Test Event's metaclass identifier[s] creation.
+        """
+        # These end up with pretty unwieldy and ugly generated names, but only
+        # because they're created inside a function inside a class.
+
+        # To avoid this test breaking by accident if the test itself is renamed
+        # or moved, don't hard-code its names or location.
+        base_identifier = "%s.%s.%s.<locals>" % (self.__class__.__module__,
+                                                 self.__class__.__qualname__,
+                                                 inspect.stack()[0].function)
+
+        class BaseEvent(metaclass=EventMeta):
+            pass
+
+        class FooEvent(BaseEvent):
+            identifier = "foo"
+
+        class BarEvent(BaseEvent):
+            pass
+
+        class QuxEvent(FooEvent):
+            pass
+
+        # Check identifier
+        assert_equal(
+            Event.identifier,
+            "ultros.events.definitions.general.Event"
+        )
+        assert_equal(FooEvent.identifier, "foo")
+        assert_equal(
+            BarEvent.identifier,
+            base_identifier + ".BarEvent"
+        )
+        assert_equal(
+            QuxEvent.identifier,
+            base_identifier + ".QuxEvent"
+        )
+
+        # Check identifiers
+        assert_equal(Event.identifiers, [
+            "ultros.events.definitions.general.Event"
+        ])
+        assert_equal(FooEvent.identifiers, [
+            base_identifier + ".BaseEvent",
+            "foo"
+        ])
+        assert_equal(BarEvent.identifiers, [
+            base_identifier + ".BaseEvent",
+            base_identifier + ".BarEvent"
+        ])
+        assert_equal(QuxEvent.identifiers, [
+            base_identifier + ".BaseEvent",
+            "foo",
+            base_identifier + ".QuxEvent"
+        ])
