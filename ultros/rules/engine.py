@@ -66,17 +66,18 @@ class RulesEngine:
 
             if result:
                 if iscoroutinefunction(transformer):
-                    transformer_result = await transformer()
+                    transformer_result = await transformer(value)
                 else:
-                    transformer_result = transformer()
+                    transformer_result = transformer(value)
             else:
                 return False  # Rule wasn't matched
 
             if isinstance(transformer_result, tuple):
+                # Updates the value being compared above
                 t_r, value = transformer_result
 
                 if t_r is TransformerResult.CONTINUE:
-                    continue  # Maybe should make that an error
+                    continue  # Continues with the updated value
                 if t_r is TransformerResult.RETURN:
                     return value
 

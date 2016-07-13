@@ -7,7 +7,7 @@ import ultros.rules.transformers as t
 from ultros.rules.engine import RulesEngine
 from ultros.rules.constants import TransformerResult
 
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_equal, assert_true, assert_raises
 from unittest import TestCase
 
 
@@ -24,10 +24,13 @@ class TestRules(TestCase):
         asyncio.set_event_loop(None)
 
     def tearDown(self):
-        del self.engine
-        del self.loop
-        del self.rule_set
-        del self.value
+        for rule_set in list(self.engine.rule_sets.keys()):
+            self.engine.del_rule_set(rule_set)
+
+        self.engine = None
+        self.loop = None
+        self.rule_set = None
+        self.value = None
 
     async def do_run(self):
         return await self.engine.run(self.rule_set, self.value)
@@ -43,31 +46,48 @@ class TestRules(TestCase):
         def predicate_false(*args):
             return False
 
-        def transformer_continue():
+        def predicate_is_true(value, comparable):
+            return value is True
+
+        def transformer_continue(value):
             return TransformerResult.CONTINUE
 
-        def transformer_return():
+        def transformer_continue_value(_value):
+            def inner(value):
+                return TransformerResult.CONTINUE, _value
+            return inner
+
+        def transformer_return(value):
             return TransformerResult.RETURN
 
-        def transformer_return_value(value):
-            def inner():
-                return TransformerResult.RETURN, value
+        def transformer_return_value(_value):
+            def inner(value):
+                return TransformerResult.RETURN, _value
             return inner
 
         self.engine.add_rule(
             "Test1", predicate_true, "", transformer_return_value("a")
         )
+
         self.engine.add_rule(
             "Test2", predicate_false, "", transformer_continue
         )
         self.engine.add_rule(
             "Test2", predicate_true, "", transformer_return_value("a")
         )
+
         self.engine.add_rule(
             "Test3", predicate_true, "", transformer_continue
         )
         self.engine.add_rule(
             "Test3", predicate_true, "", transformer_return
+        )
+
+        self.engine.add_rule(
+            "Test4", predicate_true, "", transformer_continue_value(True)
+        )
+        self.engine.add_rule(
+            "Test4", predicate_is_true, "", transformer_return_value(True)
         )
 
         self.rule_set = "Test1"
@@ -104,13 +124,24 @@ class TestRules(TestCase):
             )
         )
 
+        self.rule_set = "Test4"
+
+        result = self.loop.run_until_complete(self.do_run())
+        assert_equal(
+            result,
+            True,
+            "Invalid result for Test4; expected True, got {}".format(
+                repr(result)
+            )
+        )
+
     def test_predicates(self):
         """
         Bundled predicates
         """
 
         def transformer_return_value(value):
-            def inner():
+            def inner(_value):
                 return TransformerResult.RETURN, value
             return inner
 
@@ -248,6 +279,9 @@ class TestRules(TestCase):
         def return_true():
             return True
 
+        def predicate_is_true(value, comparable):
+            return value is True
+
         self.engine.add_rule(
             "stop", predicate_true, "", t.trans_stop
         )
@@ -283,3 +317,66 @@ class TestRules(TestCase):
         self.rule_set = "continue"
         result = self.loop.run_until_complete(self.do_run())
         assert_true(result, "Failed: trans_continue")
+
+        self.engine.add_rule(
+            "factory_trans_continue", predicate_true, "",
+            t.factory_trans_continue(True)
+        )
+        self.engine.add_rule(
+            "factory_trans_continue", predicate_is_true, "",
+            t.factory_trans_return(True)
+        )
+
+        self.rule_set = "factory_trans_continue"
+        result = self.loop.run_until_complete(self.do_run())
+        assert_true(result, "Failed: factory_trans_continue")
+
+        self.engine.add_rule(
+            "factory_trans_continue_call", predicate_true, "",
+            t.factory_trans_continue_call(lambda *_, **__: True)
+        )
+        self.engine.add_rule(
+            "factory_trans_continue_call", predicate_is_true, "",
+            t.factory_trans_return(True)
+        )
+
+        self.rule_set = "factory_trans_continue_call"
+        result = self.loop.run_until_complete(self.do_run())
+        assert_true(result, "Failed: factory_trans_continue_call")
+
+    def test_edge_cases(self):
+        self.engine.add_rule(
+            "Test1", p.equal, "", t.factory_trans_return(True)
+        )
+
+        self.engine.del_rule_set("Test1")
+
+        self.rule_set = "Test1"
+        assert_raises(LookupError, self.loop.run_until_complete, self.do_run())
+
+        def predicate_true(*args):
+            return True
+
+        self.engine.add_rule(
+            "Test2", predicate_true, "", lambda *_, **__: "derp"
+        )
+
+        self.rule_set = "Test2"
+
+        assert_raises(
+            NotImplementedError, self.loop.run_until_complete, self.do_run()
+        )
+
+        async def async_predicate_true(value, comparable):
+            return True
+
+        async def async_transformer_return_true(value):
+            return TransformerResult.RETURN, True
+
+        self.engine.add_rule(
+            "Test3", async_predicate_true, "", async_transformer_return_true
+        )
+
+        self.rule_set = "Test3"
+        result = self.loop.run_until_complete(self.do_run())
+        assert_true(result, "Failed: Test3")
