@@ -14,6 +14,8 @@ Submodules
     :toctree: events
 
     definitions
+    constants
+    manager
 """
 
 __author__ = 'Gareth Coles'
