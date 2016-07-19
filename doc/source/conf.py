@@ -39,6 +39,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinxcontrib.asyncio',
 ]
 
 # Boolean indicating whether to scan all found documents for autosummary
