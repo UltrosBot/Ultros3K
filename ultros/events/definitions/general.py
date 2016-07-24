@@ -8,7 +8,7 @@ Members
 """
 from ultros.events.definitions.meta import EventMeta
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 class Event(metaclass=EventMeta):

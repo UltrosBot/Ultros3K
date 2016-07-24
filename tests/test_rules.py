@@ -11,7 +11,7 @@ from nose.tools import assert_equal, assert_true, assert_raises
 from unittest import TestCase
 
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 class TestRules(TestCase):

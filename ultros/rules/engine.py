@@ -13,7 +13,7 @@ from typing import Union
 
 from ultros.rules.constants import TransformerResult
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 class RulesEngine:

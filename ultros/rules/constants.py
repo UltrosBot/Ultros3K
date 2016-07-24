@@ -6,7 +6,7 @@ Constants for use with the rules engine.
 
 from enum import IntEnum
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 class TransformerResult(IntEnum):

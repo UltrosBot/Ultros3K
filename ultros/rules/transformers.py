@@ -27,7 +27,7 @@ import types
 
 from ultros.rules.constants import TransformerResult
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 def trans_continue(value) -> TransformerResult:

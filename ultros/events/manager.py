@@ -7,7 +7,7 @@ from typing import Callable, Union
 from ultros.events.constants import EventPriority
 from ultros.events.definitions.general import Event
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 class EventManager:

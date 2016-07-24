@@ -19,7 +19,7 @@ import re
 from numbers import Number
 from typing import Union
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
 
 
 # Number operations

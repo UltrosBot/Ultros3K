@@ -25,4 +25,4 @@ Submodules
     transformers
 """
 
-__author__ = 'Gareth Coles'
+__author__ = "Gareth Coles"
