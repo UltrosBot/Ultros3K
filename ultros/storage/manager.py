@@ -29,7 +29,8 @@ class StorageManager:
         self.databases = {}
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
-                 args: List[Any]=None, kwargs: Dict[Any, Any]=None):
+                 args: List[Any]=None, kwargs: Dict[Any, Any]=None
+                 ) -> StorageBase:
         if path in self.data_files:
             # File already loaded at some point
             return self.data_files[path]
@@ -51,7 +52,8 @@ class StorageManager:
 
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
-                   args: List[Any]=None, kwargs: Dict[Any, Any]=None):
+                   args: List[Any]=None, kwargs: Dict[Any, Any]=None
+                   ) -> StorageBase:
 
         if path in self.config_files:
             # File already loaded at some point
@@ -96,7 +98,8 @@ class StorageManager:
             return obj
 
     def get_database(self, path: str, owner: Any=None, fmt: Optional[str]=None,
-                     args: List[Any]=None, kwargs: Dict[Any, Any]=None):
+                     args: List[Any]=None, kwargs: Dict[Any, Any]=None
+                     ) -> StorageBase:
         pass
 
     def unload_data(self, path: str):
