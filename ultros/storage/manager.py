@@ -48,8 +48,8 @@ class StorageManager:
         if _fmt is None:  # Format doesn't support data files
             return  # TODO: Exception (using fmt.name)
 
-        cls = self.get_class(_fmt)
-        obj = cls(owner)  # TODO: Params
+        format_cls = self.get_class(_fmt)
+        obj = format_cls(owner)  # TODO: Params
 
         self.config_files[path] = obj
 
@@ -77,10 +77,10 @@ class StorageManager:
         if _fmt is None:  # Format doesn't support config files
             return  # TODO: Exception (using fmt.name)
 
-        cls = self.get_class(_fmt)
+        format_cls = self.get_class(_fmt)
 
         try:
-            obj = cls(owner)  # TODO: Params
+            obj = format_cls(owner)  # TODO: Params
         except FileNotFoundError:
             if defaults_path is None:
                 return self.get_config(
@@ -125,8 +125,8 @@ class StorageManager:
     def get_class(self, package: str) -> type:
         module = importlib.import_module(package)
 
-        for name, cls in inspect.getmembers(module):
-            if inspect.isclass(cls):
-                for parent in inspect.getmro(cls):
+        for name, format_cls in inspect.getmembers(module):
+            if inspect.isclass(format_cls):
+                for parent in inspect.getmro(format_cls):
                     if parent == StorageBase:
-                        return cls
+                        return format_cls

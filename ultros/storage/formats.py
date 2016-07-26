@@ -43,11 +43,8 @@ class Formats:
     def get_format_from_path(self, path: str) -> Optional[Packages]:
         filename = os.path.split(path)[1]
 
-        if "." not in filename:
-            # Allows one to just pass in the extension as required
-            extension = filename
-        else:
-            extension = filename.split(".", 1)[1]
+        # We do it this way in case the plain extension was passed in
+        extension = filename.split(".", 1)[-1]
 
         while True:
             # Looping here for compound extensions. For example, if we have
