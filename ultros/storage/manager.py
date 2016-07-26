@@ -19,7 +19,7 @@ class StorageManager:
     config_files = None
     databases = None
 
-    def __init__(self, config_location, data_location):
+    def __init__(self, config_location: str, data_location: str):
         self.config_location = os.path.normpath(config_location)
         self.data_location = os.path.normpath(data_location)
         self.formats = Formats()
@@ -36,19 +36,24 @@ class StorageManager:
             return self.data_files[path]
 
         if fmt is None:  # Guess based on extension
-            fmt = self.formats.get_format_from_path(path)
+            _fmt = self.formats.get_format_from_path(path)
         else:  # Extension was given
-            fmt = self.formats.get_format_from_path(fmt)
+            _fmt = self.formats.get_format_from_path(fmt)
 
-        if fmt is None:  # No idea what that extension is
+        if _fmt is None:  # No idea what that extension is
             return  # TODO: Exception
 
-        fmt = fmt.data
+        _fmt = _fmt.data
 
-        if fmt is None:  # Format doesn't support data files
+        if _fmt is None:  # Format doesn't support data files
             return  # TODO: Exception (using fmt.name)
 
-        cls = self.get_class(fmt)
+        cls = self.get_class(_fmt)
+        obj = cls(owner)  # TODO: Params
+
+        self.config_files[path] = obj
+
+        return obj
 
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
