@@ -1,14 +1,16 @@
 # coding=utf-8
 from abc import ABCMeta, abstractmethod
+from typing import Any
 from weakref import ref
 
 __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner):
+    def __init__(self, owner: Any):
         self._owner = ref(owner)
         self.callbacks = []
+        self.data = {}
 
     @property
     def owner(self):
