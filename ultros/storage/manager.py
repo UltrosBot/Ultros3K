@@ -3,7 +3,7 @@ import importlib
 import inspect
 import os
 
-from typing import Optional, Any, Dict, List
+from typing import Optional, Any, Dict, List, Union
 
 from ultros.storage.base import StorageBase
 from ultros.storage.formats import Formats
@@ -50,7 +50,7 @@ class StorageManager:
         cls = self.get_class(fmt)
 
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
-                   defaults_path: Optional[str, bool]=None,
+                   defaults_path: Optional[Union[str, bool]]=None,
                    args: List[Any]=None, kwargs: Dict[Any, Any]=None):
 
         if path in self.config_files:
