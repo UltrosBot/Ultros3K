@@ -14,29 +14,37 @@ _ini_package = Packages(  # DRY
     "ultros.storage.data.ini"
 )
 
+# Constants for use in other packages that want to specify a format explicitly
+
+CONF = "conf"
+INI = "ini"
+YML = "yml"
+YML_ROUNDTRIP = "yml-roundtrip"
+JSON = "json"
+
 
 class Formats:
     def __init__(self):
         self._extensions = {
-            "conf": _ini_package,
-            "ini": _ini_package,
+            CONF: _ini_package,
+            INI: _ini_package,
 
-            "json": Packages(
+            JSON: Packages(
                 "JSON",
                 "ultros.storage.config.json",
                 "ultros.storage.data.json"
             ),
 
-            "yml": Packages(
+            YML: Packages(
                 "YAML",
                 "ultros.storage.config.yaml",
                 "ultros.storage.data.yaml"
             ),
 
-            "properties": Packages(
-                "Properties",
-                "ultros.storage.config.properties",
-                "ultros.storage.data.properties"
+            YML_ROUNDTRIP: Packages(
+                "YAML (Round-trip)",
+                "ultros.storage.config.yaml-roundtrip",
+                None
             ),
         }
 
@@ -44,7 +52,7 @@ class Formats:
         filename = os.path.split(path)[1]
 
         # We do it this way in case the plain extension was passed in
-        extension = filename.split(".", 1)[-1]
+        extension = filename.split(".", 1)[-1].lower()
 
         while True:
             # Looping here for compound extensions. For example, if we have
