@@ -1,13 +1,13 @@
 # coding=utf-8
 from abc import ABCMeta, abstractmethod
-from typing import Any
+from typing import Any, List, Dict
 from weakref import ref
 
 __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner: Any):
+    def __init__(self, owner: Any, *args: List[Any], *kwargs: Dict[Any, Any]):
         self._owner = ref(owner)
         self.callbacks = []
         self.data = {}

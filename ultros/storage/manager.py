@@ -29,7 +29,7 @@ class StorageManager:
         self.databases = {}
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
-                 args: List[Any]=None, kwargs: Dict[Any, Any]=None
+                 *args: List[Any], **kwargs: Dict[Any, Any]
                  ) -> StorageBase:
         if path in self.data_files:
             # File already loaded at some point
@@ -49,7 +49,7 @@ class StorageManager:
             return  # TODO: Exception (using fmt.name)
 
         format_cls = self.get_class(_fmt)
-        obj = format_cls(owner)  # TODO: Params
+        obj = format_cls(owner, *args, **kwargs)  # TODO: Params
 
         self.config_files[path] = obj
 
@@ -57,7 +57,7 @@ class StorageManager:
 
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
-                   args: List[Any]=None, kwargs: Dict[Any, Any]=None
+                   *args: List[Any], **kwargs: Dict[Any, Any]
                    ) -> StorageBase:
 
         if path in self.config_files:
@@ -80,8 +80,8 @@ class StorageManager:
         format_cls = self.get_class(_fmt)
 
         try:
-            obj = format_cls(owner)  # TODO: Params
-        except FileNotFoundError:
+            obj = format_cls(owner, *args, **kwargs)  # TODO: Params
+        except FileNotFoundError:  # Handle default config files
             if defaults_path is None:
                 return self.get_config(
                     path + ".default", owner, fmt,
@@ -122,7 +122,7 @@ class StorageManager:
     def unload_all(self):
         pass
 
-    def get_class(self, package: str) -> type:
+    def get_class(self, package: str) -> type(StorageBase):
         module = importlib.import_module(package)
 
         for name, format_cls in inspect.getmembers(module):
