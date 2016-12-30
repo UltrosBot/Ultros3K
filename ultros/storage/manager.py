@@ -30,7 +30,7 @@ class StorageManager:
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                  *args: List[Any], **kwargs: Dict[Any, Any]
-                 ) -> StorageBase:
+                 ) -> Union[StorageBase, None]:
         if path in self.data_files:
             # File already loaded at some point
             return self.data_files[path]
@@ -58,7 +58,7 @@ class StorageManager:
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]
-                   ) -> StorageBase:
+                   ) -> Union[StorageBase, None]:
 
         if path in self.config_files:
             # File already loaded at some point

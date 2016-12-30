@@ -7,7 +7,7 @@ __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner: Any, *args: List[Any], *kwargs: Dict[Any, Any]):
+    def __init__(self, owner: Any, *args: List[Any], **kwargs: Dict[Any, Any]):
         self._owner = ref(owner)
         self.callbacks = []
         self.data = {}
