@@ -1,4 +1,12 @@
 # coding=utf-8
+
+"""
+Base classes for storage formats
+
+Members
+=======
+"""
+
 from abc import ABCMeta, abstractmethod
 from typing import Any, List, Dict
 from weakref import ref
