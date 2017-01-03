@@ -5,7 +5,7 @@ import os
 
 from typing import Optional, Any, Dict, List, Union
 
-from ultros.storage.base import StorageBase
+from ultros.storage.base import StorageBase, MutableStorageBase
 from ultros.storage.formats import Formats
 
 __author__ = "Gareth Coles"
@@ -30,7 +30,7 @@ class StorageManager:
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                  *args: List[Any], **kwargs: Dict[Any, Any]
-                 ) -> Union[StorageBase, None]:
+                 ) -> Optional[MutableStorageBase]:
         if path in self.data_files:
             # File already loaded at some point
             return self.data_files[path]
@@ -58,7 +58,7 @@ class StorageManager:
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]
-                   ) -> Union[StorageBase, None]:
+                   ) -> Optional[StorageBase]:
 
         if path in self.config_files:
             # File already loaded at some point
