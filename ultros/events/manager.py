@@ -1,8 +1,8 @@
 # coding=utf-8
-from asyncio.coroutines import iscoroutinefunction
+from asyncio.coroutines import iscoroutinefunction, coroutine
 
 from operator import itemgetter
-from typing import Callable, Union
+from typing import Callable, Union, Optional
 
 from ultros.events.constants import EventPriority
 from ultros.events.definitions.general import Event
@@ -41,7 +41,7 @@ class EventManager:
                     # Required args
                     owner: object,
                     identifier: Union[str, Event],
-                    func: Callable[..., None],
+                    func: Callable[..., Optional[coroutine]],
 
                     # Optional args
                     priority: EventPriority = EventPriority.NORMAL,
@@ -114,7 +114,7 @@ class EventManager:
                         await func(event, *args, **kwargs)
                     else:
                         func(event, *args, **kwargs)
-                except Exception as e:
+                except Exception:
                     # TODO: Logging
-                    pass
+                    raise
         return event

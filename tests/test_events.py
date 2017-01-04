@@ -75,11 +75,22 @@ class TestEvents(TestCase):
             nonlocal fired
             fired = True
 
-        self.manager.add_handler(self, Event, handler)
+        async def other_handler(event):
+            raise NotImplementedError("This should be raised!")
 
+        self.manager.add_handler(self, Event, handler)
         self.loop.run_until_complete(self.manager.fire_event(Event()))
+        self.manager.remove_handlers_for_owner(self)
 
         assert_true(fired, "Event handler didn't fire")
+
+        self.manager.add_handler(self, Event, other_handler)
+
+        assert_raises(
+            NotImplementedError,
+            self.loop.run_until_complete,
+            self.manager.fire_event(Event())
+        )
 
     def test_priority(self):
         """
@@ -352,6 +363,16 @@ class TestEvents(TestCase):
         )
         assert_equal(
             ProtocolBaseEvent.identifier,
+            base_identifier + ".ProtocolBaseEvent"
+        )
+
+        # Check this matches when init is run also
+        assert_equal(
+            PluginBaseEvent(None).identifier,
+            base_identifier + ".PluginBaseEvent"
+        )
+        assert_equal(
+            ProtocolBaseEvent(None).identifier,
             base_identifier + ".ProtocolBaseEvent"
         )
 
