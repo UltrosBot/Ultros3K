@@ -4,11 +4,11 @@ import inspect
 from functools import partial
 
 from ultros.events.constants import EventPriority
-from ultros.events.definitions.general import Event
+from ultros.events.definitions.general import Event, PluginEvent, ProtocolEvent
 from ultros.events.definitions.meta import EventMeta
 from ultros.events.manager import EventManager
 
-from nose.tools import assert_equal, assert_true, assert_false
+from nose.tools import assert_equal, assert_true, assert_false, assert_raises
 from unittest import TestCase
 
 
@@ -48,6 +48,22 @@ class TestEvents(TestCase):
 
         assert_true(fired, "Event handler didn't fire")
         assert_false(other_fired, "Other event handler should not have fired")
+
+    def test_get_identifier(self):
+        """
+        Identifier retrieval by manager
+        """
+        assert_equal(
+            self.manager._get_identifier("Test"),
+            "Test"
+        )
+        assert_equal(self.manager._get_identifier(
+            Event()),
+            "ultros.events.definitions.general.Event"
+        )
+
+        assert_raises(TypeError, self.manager._get_identifier, 12)
+        assert_raises(TypeError, self.manager._get_identifier, None)
 
     def test_async(self):
         """
@@ -95,6 +111,9 @@ class TestEvents(TestCase):
         )
 
     def test_cancelled(self):
+        """
+        Cancelled event handling
+        """
         fired = False
         other_fired = False
 
@@ -117,6 +136,9 @@ class TestEvents(TestCase):
         assert_false(other_fired, "Other event handler should not have fired")
 
     def test_filter(self):
+        """
+        Event filtering
+        """
         fired = False
         other_fired = False
 
@@ -144,6 +166,9 @@ class TestEvents(TestCase):
         assert_false(other_fired, "Other event handler should not have fired")
 
     def test_args_kwargs(self):
+        """
+        Handler args/kwargs
+        """
         FOO = "abcde"
         BAR = "fghij"
         fired = None
@@ -169,6 +194,9 @@ class TestEvents(TestCase):
         )
 
     def test_remove(self):
+        """
+        Handler removal
+        """
         fired = False
 
         def handler(event):
@@ -182,6 +210,9 @@ class TestEvents(TestCase):
         assert_false(fired, "Removed handler fired")
 
     def test_remove_specific(self):
+        """
+        Specific handler removal
+        """
         fired = False
         other_fired = False
 
@@ -202,6 +233,9 @@ class TestEvents(TestCase):
         assert_true(other_fired, "Other handler shouldn't have been removed")
 
     def test_remove_owner(self):
+        """
+        Removing handlers for owner
+        """
         fired = False
         other_fired = False
 
@@ -231,6 +265,9 @@ class TestEvents(TestCase):
         assert_true(other_fired, "Other handler shouldn't have been removed")
 
     def test_event_identifiers_list(self):
+        """
+        Event handler firing based on identifiers list
+        """
         fired = []
         other_fired = False
 
@@ -265,7 +302,7 @@ class TestEvents(TestCase):
 
     def test_event_metaclass_identifiers(self):
         """
-        Test Event's metaclass identifier[s] creation.
+        Event's metaclass identifier[s] creation.
         """
         # These end up with pretty unwieldy and ugly generated names, but only
         # because they're created inside a function inside a class.
@@ -288,6 +325,12 @@ class TestEvents(TestCase):
         class QuxEvent(FooEvent):
             pass
 
+        class PluginBaseEvent(PluginEvent, metaclass=EventMeta):
+            pass
+
+        class ProtocolBaseEvent(ProtocolEvent, metaclass=EventMeta):
+            pass
+
         # Check identifier
         assert_equal(
             Event.identifier,
@@ -301,6 +344,15 @@ class TestEvents(TestCase):
         assert_equal(
             QuxEvent.identifier,
             base_identifier + ".QuxEvent"
+        )
+
+        assert_equal(
+            PluginBaseEvent.identifier,
+            base_identifier + ".PluginBaseEvent"
+        )
+        assert_equal(
+            ProtocolBaseEvent.identifier,
+            base_identifier + ".ProtocolBaseEvent"
         )
 
         # Check identifiers
