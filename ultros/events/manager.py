@@ -1,5 +1,5 @@
 # coding=utf-8
-from asyncio.coroutines import iscoroutinefunction, coroutine
+from asyncio.coroutines import iscoroutinefunction, _CoroutineABC
 
 from operator import itemgetter
 from typing import Callable, Union, Optional
@@ -41,7 +41,7 @@ class EventManager:
                     # Required args
                     owner: object,
                     identifier: Union[str, Event],
-                    func: Callable[..., Optional[coroutine]],
+                    func: Callable[..., Optional[_CoroutineABC]],
 
                     # Optional args
                     priority: EventPriority = EventPriority.NORMAL,
