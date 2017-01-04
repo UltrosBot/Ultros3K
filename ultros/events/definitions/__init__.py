@@ -12,6 +12,7 @@ Submodules
     :toctree: definitions
 
     general
+    meta
 """
 
 __author__ = "Gareth Coles"

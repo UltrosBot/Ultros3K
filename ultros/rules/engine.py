@@ -43,10 +43,10 @@ class RulesEngine:
 
                 * If the predicate returns True, run the transformer
                 * If the transformer returns CONTINUE, move on to the next rule
-                * If the transformer returns STOP, return None and stop
+                * If the transformer returns RETURN, return None and stop
                   processing
                 * If the transformer returns a tuple and the first value is
-                  STOP, return the second value
+                  RETURN, return the second value
 
             * If the predicate returns False, return False and stop processing
 

@@ -1,4 +1,12 @@
 # coding=utf-8
+
+"""
+Metaclass for event identifiers
+
+Members
+=======
+"""
+
 __author__ = "Sean"
 
 
