@@ -14,9 +14,10 @@ Modules
     :toctree: api
 
     events
+    plugins
+    protocols
     rules
     storage
-    system
 """
 
 __author__ = "Gareth Coles"
