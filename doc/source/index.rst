@@ -10,6 +10,7 @@ Welcome to Ultros's documentation!
     :maxdepth: 1
 
     apidocs
+    design/index
 
 
 
