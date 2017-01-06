@@ -38,10 +38,3 @@ follows.
     * :code:`__main__.py` (Main application runner)
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
