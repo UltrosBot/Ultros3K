@@ -7,8 +7,8 @@ __author__ = "Gareth Coles"
 setup(
     name='Ultros',
     version='0.0.1',
-    author='Gareth Coles',
-    author_email='gdude2002@gmail.com',
+    author='Gareth Coles, Sean Gordon',
+    author_email='Gareth Coles <gdude2002@gmail.com>',
     packages=['ultros'],
     url='http://pypi.python.org/pypi/Ultros/',
     license='LICENSE.txt',
