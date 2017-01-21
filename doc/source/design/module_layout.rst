@@ -30,8 +30,8 @@ follows.
   * :code:`ultros/`
 
     * :code:`events/`
+    * :code:`networks/`
     * :code:`plugins/`
-    * :code:`protocols/`
     * :code:`rules/`
     * :code:`storage/`
     * :code:`__init__.py`
