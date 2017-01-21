@@ -25,7 +25,7 @@ collections of Connectors and Servers, and in charge of various duties on
 their own. See below for more information on each component.
 
 .. toctree::
-    :caption:
+    :maxdepth: 1
 
     connectors
     networks
