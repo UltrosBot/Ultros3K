@@ -14,6 +14,7 @@ Modules
     :toctree: api
 
     events
+    networks
     plugins
     protocols
     rules
