@@ -1,7 +1,7 @@
 # coding=utf-8
 
 """
-Base network connectors - TODO: Describe
+Base network servers - TODO: Describe
 
 Modules
 =======
