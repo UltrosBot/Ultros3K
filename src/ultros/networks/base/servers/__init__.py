@@ -6,16 +6,12 @@ Base network connectors - TODO: Describe
 Modules
 =======
 
-.. currentmodule:: ultros.networks.base.connectors
+.. currentmodule:: ultros.networks.base.servers
 
 .. autosummary::
-    :toctree: connectors
+    :toctree: servers
 
-    base
-    process_connector
-    tcp_connector
-    udp_connector
-    websocket_connector
+    server
 """
 
 __author__ = "Gareth Coles"
