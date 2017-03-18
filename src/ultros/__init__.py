@@ -19,6 +19,7 @@ Modules
     protocols
     rules
     storage
+    ultros
 """
 
 __author__ = "Gareth Coles"

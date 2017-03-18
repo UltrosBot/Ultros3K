@@ -8,7 +8,9 @@ from asyncio.coroutines import iscoroutinefunction, _CoroutineABC
 
 from operator import itemgetter
 from typing import Callable, Union, Optional
+from weakref import ref
 
+from ultros import ultros as u
 from ultros.events.constants import EventPriority
 from ultros.events.definitions.general import Event
 
@@ -39,7 +41,14 @@ class EventManager:
     #     ]
     # }
 
-    def __init__(self):
+    _ultros = None
+
+    @property
+    def ultros(self):
+        return self.ultros()
+
+    def __init__(self, ultros: u.Ultros):
+        self._ultros = ref(ultros)
         self.registered = {}
 
     def _get_identifier(self, identifier: Union[str, Event]):

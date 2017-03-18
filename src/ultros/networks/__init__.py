@@ -12,6 +12,7 @@ Modules
     :toctree: networks
 
     base
+    manager
 """
 
 __author__ = "Gareth Coles"
