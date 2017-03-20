@@ -75,6 +75,14 @@ class StorageManager:
         self.config_files = {}
         self.databases = {}
 
+    def shutdown(self):
+        try:
+            self.unload_all()
+        except Exception as e:
+            print(e)  # TODO: Logging
+
+        self.ultros = None
+
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]

@@ -46,6 +46,10 @@ class EventManager:
         self.ultros = ultros
         self.registered = {}
 
+    def shutdown(self):
+        self.registered.clear()
+        self.ultros = None
+
     def _get_identifier(self, identifier: Union[str, Event]):
         if isinstance(identifier, str):
             return identifier
