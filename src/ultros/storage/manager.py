@@ -15,7 +15,6 @@ import inspect
 import os
 
 from typing import Optional, Any, Dict, List, Union
-from weakref import ref
 
 from ultros import ultros as u
 from ultros.storage.base import StorageBase, MutableStorageBase
@@ -58,11 +57,7 @@ class StorageManager:
 
     file_formats = None
 
-    _ultros = None
-
-    @property
-    def ultros(self):
-        return self.ultros()
+    ultros = None
 
     def __init__(self, ultros: u.Ultros, config_location: str,
                  data_location: str):
@@ -70,7 +65,7 @@ class StorageManager:
         :param config_location: Path to a directory for config files
         :param data_location: Path to a directory for data files
         """
-        self._ultros = ref(ultros)
+        self.ultros = ultros
 
         self.config_location = os.path.normpath(config_location)
         self.data_location = os.path.normpath(data_location)

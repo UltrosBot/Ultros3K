@@ -1,16 +1,11 @@
 # coding=utf-8
 from ultros import ultros as u
-from weakref import ref
 
 __author__ = "Gareth Coles"
 
 
 class PluginManager:
-    _ultros = None
-
-    @property
-    def ultros(self):
-        return self.ultros()
+    ultros = None
 
     def __init__(self, ultros: u.Ultros):
-        self._ultros = ref(ultros)
+        self.ultros = ultros
