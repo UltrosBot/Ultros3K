@@ -1,5 +1,10 @@
 # coding=utf-8
 
+from ultros.core.events import manager as event_manager
+from ultros.core.networks import manager as network_manager
+from ultros.core.plugins import manager as plugin_manager
+from ultros.core.storage import manager as storage_manager
+
 """
 The Ultros class - encapsulation for what matters.
 
@@ -22,13 +27,11 @@ class Ultros:
     storage_manager = None
 
     def __init__(self, config_dir: str, data_dir: str):
-        from ultros.core.events import manager as event_manager
-        from ultros.core.networks import manager as network_manager
-        from ultros.core.plugins import manager as plugin_manager
-        from ultros.core.storage import manager as storage_manager
-
         # Load order is important
-        self.storage_manager = storage_manager.StorageManager(self, config_dir, data_dir)
+        self.storage_manager = storage_manager.StorageManager(
+            self, config_dir, data_dir
+        )
+
         self.event_manager = event_manager.EventManager(self)
         self.network_manager = network_manager.NetworkManager(self)
         self.plugin_manager = plugin_manager.PluginManager(self)

@@ -59,7 +59,7 @@ class StorageManager:
 
     ultros = None
 
-    def __init__(self, ultros: u.Ultros, config_location: str,
+    def __init__(self, ultros: "u.Ultros", config_location: str,
                  data_location: str):
         """
         :param config_location: Path to a directory for config files

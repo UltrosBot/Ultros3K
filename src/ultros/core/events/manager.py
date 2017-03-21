@@ -42,7 +42,7 @@ class EventManager:
 
     ultros = None
 
-    def __init__(self, ultros: u.Ultros):
+    def __init__(self, ultros: "u.Ultros"):
         self.ultros = ultros
         self.registered = {}
 

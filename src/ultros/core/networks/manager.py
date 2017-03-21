@@ -7,7 +7,7 @@ __author__ = "Gareth Coles"
 class NetworkManager:
     ultros = None
 
-    def __init__(self, ultros: u.Ultros):
+    def __init__(self, ultros: "u.Ultros"):
         self.ultros = ultros
 
     def shutdown(self):
