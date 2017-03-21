@@ -76,7 +76,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Ultros'
+project = 'Ultros (Core)'
 copyright = '2016, Gareth Coles & Sean Gordon'
 author = 'Gareth Coles & Sean Gordon'
 
@@ -287,7 +287,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Ultros.tex', 'Ultros Documentation',
+    (master_doc, 'Ultros.tex', 'Ultros (Core) Documentation',
      'Gareth Coles & Sean Gordon', 'manual'),
 ]
 
@@ -323,7 +323,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ultros', 'Ultros Documentation',
+    (master_doc, 'ultros', 'Ultros (Core) Documentation',
      [author], 1)
 ]
 
@@ -338,7 +338,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Ultros', 'Ultros Documentation',
+    (master_doc, 'Ultros', 'Ultros (Core) Documentation',
      author, 'Ultros', 'One line description of project.',
      'Miscellaneous'),
 ]

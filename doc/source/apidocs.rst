@@ -1,4 +1,4 @@
 API Documentation
 =================
 
-.. automodule:: ultros
+.. automodule:: ultros.core
