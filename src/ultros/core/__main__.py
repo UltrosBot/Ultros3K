@@ -1,5 +1,8 @@
 # coding=utf-8
 import argparse
+import asyncio
+
+from ultros.core.ultros import Ultros
 
 """
 Ultros - Module runnable
@@ -9,11 +12,13 @@ __author__ = "Gareth Coles"
 __version__ = "0.0.1"
 
 
-def start():
-    pass
+def start(args):
+    u = Ultros(args.config, args.data)
+    # Gonna have to be a coroutine if we're AIO-based. Probably.
+    asyncio.get_event_loop().run_until_complete(u.start)
 
 
-def init():
+def init(args):
     pass
 
 

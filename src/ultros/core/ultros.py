@@ -68,3 +68,6 @@ class Ultros:
                 print(e)  # TODO: Logging
 
             self.plugin_manager = None
+
+    async def start(self):
+        pass  # TODO
