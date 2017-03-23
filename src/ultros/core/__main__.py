@@ -48,4 +48,4 @@ if __name__ == "__main__":
     if hasattr(args, "func"):
         args.func(args)
     else:
-        print(parser.format_usage())
+        parser.print_usage()
