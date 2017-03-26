@@ -36,7 +36,7 @@ sys.path.insert(0, os.path.abspath('../../src/'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    # 'sphinx_autodoc_typehints',
+    'sphinx_autodoc_typehints',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
