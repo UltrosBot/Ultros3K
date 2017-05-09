@@ -6,7 +6,7 @@ __author__ = "Gareth Coles"
 
 
 setup(
-    name='Ultros (Core)',
+    name='Ultros',
     version='0.0.1',
     author='Gareth Coles, Sean Gordon',
     author_email='Gareth Coles <gdude2002@gmail.com>',
@@ -19,5 +19,5 @@ setup(
     install_requires=open(
         "requirements.txt"
     ).read().replace("\r", "").split("\n"),
-    namespace_packages=["ultros"]
+    namespace_packages=["ultros", "ultros.networks", "ultros.plugins"]
 )
