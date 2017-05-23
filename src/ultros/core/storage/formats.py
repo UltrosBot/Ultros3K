@@ -26,11 +26,13 @@ _ini_package = Packages(  # DRY
 
 # Constants for use in other packages that want to specify a format explicitly
 
+BIN = "bin"
 CONF = "conf"
 INI = "ini"
+JSON = "json"
+TXT = "txt"
 YML = "yml"
 YML_ROUNDTRIP = "yml-roundtrip"
-JSON = "json"
 
 
 class FileFormats:
@@ -63,23 +65,33 @@ class FileFormats:
 
     The following formats are supported out of the box:
 
-    +----------------+--------------------------+---------------+
-    | Extension      | Format                   | Storage types |
-    +================+==========================+===============+
-    | .conf          | INI                      | Config & Data |
-    +----------------+--------------------------+---------------+
-    | .ini           | INI                      | Config & Data |
-    +----------------+--------------------------+---------------+
-    | .json          | JSON                     | Config & Data |
-    +----------------+--------------------------+---------------+
-    | .yml           | YAML                     | Config & Data |
-    +----------------+--------------------------+---------------+
-    | .yml-roundtrip | YAML (round-trip parser) | Config only   |
-    +----------------+--------------------------+---------------+
+    +----------------+---------------------------+---------------+
+    | Extension      | Format                    | Storage types |
+    +================+===========================+===============+
+    | .bin           | Direct-access binary file | Data          |
+    +----------------+---------------------------+---------------+
+    | .conf          | INI                       | Config & Data |
+    +----------------+---------------------------+---------------+
+    | .ini           | INI                       | Config & Data |
+    +----------------+---------------------------+---------------+
+    | .json          | JSON                      | Config & Data |
+    +----------------+---------------------------+---------------+
+    | .txt           | Direct-access text file   | Data          |
+    +----------------+---------------------------+---------------+
+    | .yml           | YAML                      | Config & Data |
+    +----------------+---------------------------+---------------+
+    | .yml-roundtrip | YAML (round-trip parser)  | Config only   |
+    +----------------+---------------------------+---------------+
     """
 
     def __init__(self):
         self._extensions = {
+            BIN: Packages(
+                "Binary File",
+                None,
+                "ultros.storage.data.binary"
+            ),
+
             CONF: _ini_package,
             INI: _ini_package,
 
@@ -87,6 +99,12 @@ class FileFormats:
                 "JSON",
                 "ultros.storage.config.json",
                 "ultros.storage.data.json"
+            ),
+
+            TXT: Packages(
+                "Text File",
+                None,
+                "ultros.storage.data.text"
             ),
 
             YML: Packages(
