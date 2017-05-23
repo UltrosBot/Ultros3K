@@ -26,7 +26,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="ultros")
 
     parser.add_argument(
-        "--version", action="version", version=f"Ultros {__version__}"
+        "--version", action="version", version="Ultros {}".format(__version__)
     )
 
     parser.add_argument(

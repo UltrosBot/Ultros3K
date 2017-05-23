@@ -16,7 +16,7 @@ from typing import Optional
 
 __author__ = "Gareth Coles"
 
-Packages = namedtuple("Packages", ["name", "config", "data"])
+Packages = namedtuple("Packages", ("name", "config", "data"))
 
 _ini_package = Packages(  # DRY
     "INI",
