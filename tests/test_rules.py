@@ -1,11 +1,11 @@
 # coding=utf-8
 import asyncio
 
-import ultros.rules.predicates as p
-import ultros.rules.transformers as t
+import ultros.core.rules.predicates as p
+import ultros.core.rules.transformers as t
 
-from ultros.rules.engine import RulesEngine
-from ultros.rules.constants import TransformerResult
+from ultros.core.rules.engine import RulesEngine
+from ultros.core.rules.constants import TransformerResult
 
 from nose.tools import assert_equal, assert_true, assert_raises
 from unittest import TestCase

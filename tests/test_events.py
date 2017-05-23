@@ -3,10 +3,10 @@ import asyncio
 import inspect
 from functools import partial
 
-from ultros.events.constants import EventPriority
-from ultros.events.definitions.general import Event, PluginEvent, ProtocolEvent
-from ultros.events.definitions.meta import EventMeta
-from ultros.events.manager import EventManager
+from ultros.core.events.constants import EventPriority
+from ultros.core.events.definitions.general import Event, PluginEvent, ProtocolEvent
+from ultros.core.events.definitions.meta import EventMeta
+from ultros.core.events.manager import EventManager
 
 from nose.tools import assert_equal, assert_true, assert_false, assert_raises
 from unittest import TestCase
@@ -17,7 +17,7 @@ __author__ = "Sean"
 
 class TestEvents(TestCase):
     def setUp(self):
-        self.manager = EventManager()
+        self.manager = EventManager(None)
 
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(None)
@@ -59,7 +59,7 @@ class TestEvents(TestCase):
         )
         assert_equal(self.manager._get_identifier(
             Event()),
-            "ultros.events.definitions.general.Event"
+            "ultros.core.events.definitions.general.Event"
         )
 
         assert_raises(TypeError, self.manager._get_identifier, 12)
@@ -345,7 +345,7 @@ class TestEvents(TestCase):
         # Check identifier
         assert_equal(
             Event.identifier,
-            "ultros.events.definitions.general.Event"
+            "ultros.core.events.definitions.general.Event"
         )
         assert_equal(FooEvent.identifier, "foo")
         assert_equal(
@@ -378,7 +378,7 @@ class TestEvents(TestCase):
 
         # Check identifiers
         assert_equal(Event.identifiers, [
-            "ultros.events.definitions.general.Event"
+            "ultros.core.events.definitions.general.Event"
         ])
         assert_equal(FooEvent.identifiers, [
             base_identifier + ".BaseEvent",
