@@ -2,4 +2,4 @@ sphinx
 sphinxcontrib-asyncio
 sphinx-autodoc-typehints>=1.2.0
 sphinx_rtd_theme
-
+pyparsing
