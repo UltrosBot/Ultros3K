@@ -54,6 +54,7 @@ autoclass_content = 'both'  # include both class docstring and __init__
 autodoc_default_flags = [
     # Make sure that any autodoc declarations show the right members
     'members',
+    'undoc-members',
     'private-members',
     'special-members',
     'show-inheritance',
