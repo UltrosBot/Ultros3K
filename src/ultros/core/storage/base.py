@@ -8,21 +8,29 @@ Members
 """
 
 from abc import ABCMeta, abstractmethod
+from contextlib import AbstractContextManager
 from typing import Any, List, Dict
 from weakref import ref
+
+from ultros.core.storage import manager as m
 
 __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner: Any, *args: List[Any], **kwargs: Dict[Any, Any]):
+    def __init__(self, owner: Any, manager: "m.StorageManager", *args: List[Any], **kwargs: Dict[Any, Any]):
         self._owner = ref(owner)
+        self._manager = ref(manager)
         self.callbacks = []
         self.data = {}
 
     @property
     def owner(self):
         return self._owner()
+
+    @property
+    def manager(self):
+        return self._manager()
 
     @abstractmethod
     def load(self):
@@ -32,30 +40,40 @@ class StorageBase(metaclass=ABCMeta):
     def reload(self):
         pass
 
+    @abstractmethod
+    def unload(self):
+        pass
+
     def run_callbacks(self):
         # TODO: Think about this
         for callback in self.callbacks:
             callback(self)
 
 
-class MutableStorageBase(StorageBase, metaclass=ABCMeta):
+class MutableStorageBase(StorageBase, AbstractContextManager, metaclass=ABCMeta):
     @abstractmethod
     def save(self):
         pass
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if not any((exc_type, exc_val, exc_tb)):
+            # Everything is None; no errors - we can save
+
+            self.save()
+
 
 class ItemAccessMixin(metaclass=ABCMeta):
     @abstractmethod
-    def __getitem__(self, item):
+    def __contains__(self, item):
         """
-        c["a"], c[2], c[a:b], c[1:2:3], etc
+        x in c
         """
         pass
 
     @abstractmethod
-    def __len__(self):
+    def __getitem__(self, item):
         """
-        len(c)
+        c["a"], c[2], c[a:b], c[1:2:3], etc
         """
         pass
 
@@ -67,25 +85,25 @@ class ItemAccessMixin(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def __contains__(self, item):
+    def __len__(self):
         """
-        x in c
+        len(c)
         """
         pass
 
 
 class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
     @abstractmethod
-    def __setitem__(self, key, value):
+    def __delitem__(self, key):
         """
-        c["a"] = b
+        del c["a"]
         """
         pass
 
     @abstractmethod
-    def __delitem__(self, key):
+    def __setitem__(self, key, value):
         """
-        del c["a"]
+        c["a"] = b
         """
         pass
 

@@ -139,7 +139,8 @@ class StorageManager:
         format_cls = self.get_class(_fmt)
 
         try:
-            obj = format_cls(owner, *args, **kwargs)  # TODO: Params
+            obj = format_cls(owner, self, *args, **kwargs)  # TODO: Params
+            obj.load()
         except FileNotFoundError:  # Handle default config files
             if defaults_path is None:
                 return self.get_config(
@@ -201,7 +202,8 @@ class StorageManager:
             return  # TODO: Exception (using fmt.name)
 
         format_cls = self.get_class(_fmt)
-        obj = format_cls(owner, *args, **kwargs)  # TODO: Params
+        obj = format_cls(owner, self, *args, **kwargs)  # TODO: Params
+        obj.load()
 
         self.data_files[path] = obj
 

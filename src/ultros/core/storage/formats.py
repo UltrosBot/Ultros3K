@@ -30,6 +30,7 @@ BIN = "bin"
 CONF = "conf"
 INI = "ini"
 JSON = "json"
+TOML = "toml"
 TXT = "txt"
 YML = "yml"
 YML_ROUNDTRIP = "yml-roundtrip"
@@ -68,7 +69,7 @@ class FileFormats:
     +----------------+---------------------------+---------------+
     | Extension      | Format                    | Storage types |
     +================+===========================+===============+
-    | .bin           | Direct-access binary file | Data          |
+    | .bin           | Direct-access binary file | Data only     |
     +----------------+---------------------------+---------------+
     | .conf          | INI                       | Config & Data |
     +----------------+---------------------------+---------------+
@@ -76,7 +77,9 @@ class FileFormats:
     +----------------+---------------------------+---------------+
     | .json          | JSON                      | Config & Data |
     +----------------+---------------------------+---------------+
-    | .txt           | Direct-access text file   | Data          |
+    | .toml          | TOML                      | Config & Data |
+    +----------------+---------------------------+---------------+
+    | .txt           | Direct-access text file   | Data only     |
     +----------------+---------------------------+---------------+
     | .yml           | YAML                      | Config & Data |
     +----------------+---------------------------+---------------+
@@ -99,6 +102,12 @@ class FileFormats:
                 "JSON",
                 "ultros.storage.config.json",
                 "ultros.storage.data.json"
+            ),
+
+            TOML: Packages(
+                "TOML",
+                "ultros.storage.config.toml",
+                "ultros.storage.data.toml"
             ),
 
             TXT: Packages(
