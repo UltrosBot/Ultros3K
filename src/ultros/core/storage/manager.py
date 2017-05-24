@@ -5,10 +5,9 @@ The storage manager, which is in charge of all things storage
 
 This is not a singleton any more! You'll need to get an instance of it
 elsewhere.
+"""
 
-Members
-=======
-"""  # TODO: Where to get the instance
+# TODO: Where to get the instance
 
 import importlib
 import inspect

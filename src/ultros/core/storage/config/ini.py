@@ -1,10 +1,7 @@
 # coding=utf-8
 
 """
-INI-based configuration class with some small additions
-
-Members
-=======
+Class for INI-based configurations
 """
 
 import os
@@ -19,6 +16,10 @@ __author__ = "Gareth Coles"
 
 
 class INIConfig(ConfigFile, ItemAccessMixin):
+    """
+    Class for INI-based configurations
+    """
+
     def __init__(self, owner: Any, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
         super().__init__(owner, *args, **kwargs)
 
@@ -46,22 +47,22 @@ class INIConfig(ConfigFile, ItemAccessMixin):
 
     def has_section(self, section):
         """
-        Indicates whether the named `section' is present. The "DEFAULT" section is not acknowledged.
+        Indicates whether the named `section` is present. The "DEFAULT" section is not acknowledged.
         """
 
         return self.data.has_section(section)
 
     def options(self, section):
         """
-        Returns a list of options available in the specified `section'.
+        Returns a list of options available in the specified `section`.
         """
 
         return self.data.options(section)
 
     def has_option(self, section, option):
         """
-        If the given `section' exists, and contains the given `option', return `True'; otherwise return `False'.
-        If the specified `section' is `None' or an empty string, "DEFAULT" is assumed.
+        If the given `section` exists, and contains the given `option`, return `True`; otherwise return `False`.
+        If the specified `section` is `None` or an empty string, "DEFAULT" is assumed.
         """
 
         return self.data.has_option(section, option)
@@ -70,37 +71,37 @@ class INIConfig(ConfigFile, ItemAccessMixin):
         """
         Get an option value for a given section.
         
-        The option is looked up in `vars' (if provided), `section', and in the "DEFAULT" section in that order.
-        If the key is not found and `fallback' is provided, it is used as a fallback value. `None' can be provided as
-        a `fallback' value.
+        The option is looked up in `vars` (if provided), `section`, and in the "DEFAULT" section in that order.
+        If the key is not found and `fallback` is provided, it is used as a fallback value. `None` can be provided as
+        a `fallback` value.
         
-        If `raw' is True, then interpolations are not expanded in the return values.
+        If `raw` is True, then interpolations are not expanded in the return values.
         """
 
         return self.data.get(section, option, raw=raw, vars=vars, fallback=fallback)
 
     def getint(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> int:
         """
-        Same as `get', but the result will be coerced to an `int'.
+        Same as `get`, but the result will be coerced to an `int`.
         """
 
         return self.data.getint(section, option, raw=raw, vars=vars, fallback=fallback)
 
     def getfloat(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> float:
         """
-        Same as `get', but the result will be coerced to a `float'.
+        Same as `get`, but the result will be coerced to a `float`.
         """
 
         return self.data.getfloat(section, option, raw=raw, vars=vars, fallback=fallback)
 
     def getboolean(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> bool:
         """
-        Same as `get', but the result will be coerced to a `bool'.
+        Same as `get`, but the result will be coerced to a `bool`.
         
         Note that different values for the option are accepted here and will affect the return value..
         
-        For True: `1', `yes', `true', `on'
-        For False: `0', `no', `false', `off'
+        For True: `1`, `yes`, `true`, `on`
+        For False: `0`, `no`, `false`, `off`
         
         Anything else will return a ValueError.
         """
@@ -109,10 +110,10 @@ class INIConfig(ConfigFile, ItemAccessMixin):
 
     def items(self, section=_UNSET, raw=False, vars=None):
         """
-        When `section' is not given, return a list of (*section_name*, *section_proxy*) pairs, including the "DEFAULT"
-        section. Otherwise, return a list of (*name*, *value*) pairs for the options in the given `section'.
+        When `section` is not given, return a list of (*section_name*, *section_proxy*) pairs, including the "DEFAULT"
+        section. Otherwise, return a list of (*name*, *value*) pairs for the options in the given `section`.
         
-        Optional arguments have the same meaning as for the `get' method.
+        Optional arguments have the same meaning as for the `get` method.
         """
         if section == _UNSET:
             return self.data.items(raw=raw, vars=vars)

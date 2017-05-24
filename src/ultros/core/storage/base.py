@@ -2,9 +2,6 @@
 
 """
 Base classes for storage formats
-
-Members
-=======
 """
 
 from abc import ABCMeta, abstractmethod

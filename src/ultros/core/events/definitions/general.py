@@ -2,9 +2,6 @@
 
 """
 General event types and base classes
-
-Members
-=======
 """
 from ultros.core.events.definitions.meta import EventMeta
 

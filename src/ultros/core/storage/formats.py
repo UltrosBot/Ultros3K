@@ -4,9 +4,6 @@
 Definitions for storage formats and what they support
 
 This may be acted upon by plugins that wish to add their own formats.
-
-Members
-=======
 """
 
 import os

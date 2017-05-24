@@ -20,6 +20,7 @@ Submodules
 .. autosummary::
     :toctree: storage
 
+    base
     config
     data
     database

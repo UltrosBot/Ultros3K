@@ -2,9 +2,6 @@
 
 """
 Metaclass for event identifiers
-
-Members
-=======
 """
 
 __author__ = "Sean"

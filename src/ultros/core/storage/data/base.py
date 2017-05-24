@@ -3,9 +3,6 @@
 
 """
 Base classes for data formats only
-
-Members
-=======
 """
 
 from abc import ABCMeta
@@ -15,4 +12,7 @@ __author__ = "Gareth Coles"
 
 
 class DataFile(MutableStorageBase, metaclass=ABCMeta):
+    """
+    Base class representing any data file
+    """
     pass

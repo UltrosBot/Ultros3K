@@ -2,9 +2,6 @@
 
 """
 Base classes for configuration formats only
-
-Members
-=======
 """
 
 from abc import ABCMeta
@@ -14,8 +11,14 @@ __author__ = "Gareth Coles"
 
 
 class ConfigFile(StorageBase, metaclass=ABCMeta):
+    """
+    Base class representing any config file
+    """
     pass
 
 
 class MutableConfigFile(ConfigFile, MutableStorageBase, metaclass=ABCMeta):
+    """
+    Base class representing any *mutable* config file
+    """
     pass
