@@ -163,7 +163,7 @@ class INIConfig(ConfigFile, ItemAccessMixin):
 
     def __len__(self):
         """
-        Wrapper for `ConfigParser.__iter__()`
+        Wrapper for `ConfigParser.__len__()`
         """
 
         return self.data.__len__()
