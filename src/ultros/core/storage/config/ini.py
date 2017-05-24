@@ -155,7 +155,15 @@ class INIConfig(ConfigFile, ItemAccessMixin):
         return self.data[item]
 
     def __iter__(self):
+        """
+        Wrapper for `ConfigParser.__iter__()`
+        """
+
         return self.data.__iter__()
 
     def __len__(self):
+        """
+        Wrapper for `ConfigParser.__iter__()`
+        """
+
         return self.data.__len__()
