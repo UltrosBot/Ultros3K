@@ -48,13 +48,13 @@ class StorageManager:
     :ivar file_formats: A FileFormats object representing all supported formats
     """
 
-    from ultros.core.storage.base import MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, \
+    from ultros.core.storage.base import ItemAccessMixin, MutableItemAccessMixin, \
         DictFunctionsMixin, MutableDictFunctionsMixin
     from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
     from ultros.core.storage.data.base import DataFile
 
     BASE_CLASSES = [
-        sb.StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
+        sb.StorageBase, sb.MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
         MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
     ]
 
@@ -174,7 +174,7 @@ class StorageManager:
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                  *args: List[Any], **kwargs: Dict[Any, Any]
-                 ) -> Optional[MutableStorageBase]:
+                 ) -> Optional[sb.MutableStorageBase]:
         """
         Attempts to load a data file (if it isn't already loaded) and
         returns it to you.
