@@ -105,28 +105,24 @@ class ItemAccessMixin(metaclass=ABCMeta):
         """
         x in c
         """
-        pass
 
     @abstractmethod
     def __getitem__(self, item):
         """
         c["a"], c[2], c[a:b], c[1:2:3], etc
         """
-        pass
 
     @abstractmethod
     def __iter__(self):
         """
         for x in c
         """
-        pass
 
     @abstractmethod
     def __len__(self):
         """
         len(c)
         """
-        pass
 
 
 class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
@@ -141,14 +137,12 @@ class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
         """
         del c["a"]
         """
-        pass
 
     @abstractmethod
     def __setitem__(self, key, value):
         """
         c["a"] = b
         """
-        pass
 
 
 class DictFunctionsMixin(metaclass=ABCMeta):
@@ -163,7 +157,6 @@ class DictFunctionsMixin(metaclass=ABCMeta):
         """
         Return a shallow copy of the data
         """
-        pass
 
     @abstractmethod
     def get(self, key, default=None):
@@ -171,28 +164,24 @@ class DictFunctionsMixin(metaclass=ABCMeta):
         Return the data corresponding to the key, or the default value
         if it doesn't exist
         """
-        pass
 
     @abstractmethod
     def items(self):
         """
         Return an iterator or view over (key, value) pairs
         """
-        pass
 
     @abstractmethod
     def keys(self):
         """
         Return an iterator or view of just the keys
         """
-        pass
 
     @abstractmethod
     def values(self):
         """
         Return an iterator or view of just the values
         """
-        pass
 
 
 class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
@@ -208,7 +197,6 @@ class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
         """
         Delete all stored data
         """
-        pass
 
     @abstractmethod
     def pop(self, key, default=None):
@@ -216,14 +204,12 @@ class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
         If a key exists, remove it from the dict and return its value.
         Return the default if it doesn't
         """
-        pass
 
     @abstractmethod
     def popitem(self):
         """
         Pull a (key, value) pair, remove it from storage and return it
         """
-        pass
 
     @abstractmethod
     def setdefault(self, key, default=None):
@@ -231,7 +217,6 @@ class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
         Return the value of the key if it exists. If not, set the
         default value to that key and return the value
         """
-        pass
 
     @abstractmethod
     def update(self, other):
@@ -239,4 +224,3 @@ class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
         Update your data using the (key, value) pairs of other, overwriting
         as necessary
         """
-        pass

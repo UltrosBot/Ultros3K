@@ -100,8 +100,8 @@ class INIConfig(ConfigFile, ItemAccessMixin):
 
         Note that different values for the option are accepted here and will affect the return value..
 
-        For True: `1`, `yes`, `true`, `on`
-        For False: `0`, `no`, `false`, `off`
+        * For True: `1`, `yes`, `true`, `on`
+        * For False: `0`, `no`, `false`, `off`
 
         Anything else will return a ValueError.
         """
