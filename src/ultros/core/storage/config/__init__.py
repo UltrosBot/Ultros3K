@@ -41,6 +41,7 @@ Submodules
     json
     python
     toml
+    yaml
 """
 
 __author__ = "Gareth Coles"

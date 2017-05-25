@@ -1,0 +1,7 @@
+test: test
+herp: "derp"
+
+int: 1
+float: 1.1
+boolean: true
+other_boolean: false
