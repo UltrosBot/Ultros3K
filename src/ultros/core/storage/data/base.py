@@ -6,13 +6,13 @@ import os
 from abc import ABCMeta
 from typing import Any, List, Dict
 
-from ultros.core.storage import base as sb
+from ultros.core.storage.base import MutableStorageBase
 from ultros.core.storage import manager as m
 
 __author__ = "Gareth Coles"
 
 
-class DataFile(sb.MutableStorageBase, metaclass=ABCMeta):
+class DataFile(MutableStorageBase, metaclass=ABCMeta):
     """
     Base class representing any data file
     """

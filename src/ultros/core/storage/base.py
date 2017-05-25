@@ -9,13 +9,11 @@ from contextlib import AbstractContextManager
 from typing import Any, List, Dict
 from weakref import ref
 
-from ultros.core.storage import manager as m
-
 __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner: Any, manager: "m.StorageManager", path: str,
+    def __init__(self, owner: Any, manager: "ultros.core.storage.manager.StorageManager", path: str,
                  *args: List[Any], **kwargs: Dict[Any, Any]):
         if owner:
             self._owner = ref(owner)
@@ -32,7 +30,7 @@ class StorageBase(metaclass=ABCMeta):
         return self._owner()
 
     @property
-    def manager(self) -> "StorageManager":
+    def manager(self):
         return self._manager()
 
     @abstractmethod

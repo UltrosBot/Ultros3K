@@ -8,13 +8,14 @@ import os
 from abc import ABCMeta
 from typing import Any, List, Dict
 
-from ultros.core.storage import base as sb
+from ultros.core.storage.base import StorageBase, MutableStorageBase
+
 from ultros.core.storage import manager as m
 
 __author__ = "Gareth Coles"
 
 
-class ConfigFile(sb.StorageBase, metaclass=ABCMeta):
+class ConfigFile(StorageBase, metaclass=ABCMeta):
     """
     Base class representing any config file
     """
@@ -28,7 +29,7 @@ class ConfigFile(sb.StorageBase, metaclass=ABCMeta):
             raise FileNotFoundError()
 
 
-class MutableConfigFile(ConfigFile, sb.MutableStorageBase, metaclass=ABCMeta):
+class MutableConfigFile(ConfigFile, MutableStorageBase, metaclass=ABCMeta):
     """
     Base class representing any *mutable* config file
     """

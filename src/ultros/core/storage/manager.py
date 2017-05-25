@@ -17,12 +17,19 @@ from typing import Optional, Any, Dict, List, Union
 
 from ultros.core import ultros as u
 
-from ultros.core.storage import base as sb
-from ultros.core.storage.config import base as cb
-from ultros.core.storage.data import base as db
+from ultros.core.storage.base import StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, \
+    DictFunctionsMixin, MutableDictFunctionsMixin
+from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
+from ultros.core.storage.data.base import DataFile
+
 from ultros.core.storage.formats import FileFormats
 
 __author__ = "Gareth Coles"
+
+BASE_CLASSES = [
+    StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
+    MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
+]
 
 
 class StorageManager:
@@ -49,11 +56,6 @@ class StorageManager:
 
     :ivar file_formats: A FileFormats object representing all supported formats
     """
-
-    BASE_CLASSES = [
-        sb.StorageBase, sb.MutableStorageBase, sb.ItemAccessMixin, sb.MutableItemAccessMixin, sb.DictFunctionsMixin,
-        sb.MutableDictFunctionsMixin, cb.ConfigFile, cb.MutableConfigFile, db.DataFile
-    ]
 
     config_location = None
     data_location = None
@@ -93,7 +95,7 @@ class StorageManager:
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]
-                   ) -> Optional[sb.StorageBase]:
+                   ) -> Optional[StorageBase]:
         """
         Attempts to load a config file (if it isn't already loaded) and
         returns it to you.
@@ -171,7 +173,7 @@ class StorageManager:
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                  *args: List[Any], **kwargs: Dict[Any, Any]
-                 ) -> Optional[sb.MutableStorageBase]:
+                 ) -> Optional[MutableStorageBase]:
         """
         Attempts to load a data file (if it isn't already loaded) and
         returns it to you.
@@ -218,7 +220,7 @@ class StorageManager:
 
     def get_database(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                      args: List[Any]=None, kwargs: Dict[Any, Any]=None
-                     ) -> sb.StorageBase:
+                     ) -> StorageBase:
         """
         This function has not been finalized yet.
 
@@ -279,7 +281,7 @@ class StorageManager:
         """
         pass
 
-    def get_class(self, package: str) -> Optional[type(sb.StorageBase)]:
+    def get_class(self, package: str) -> Optional[type(StorageBase)]:
         """
         Load a storage object class by searching for it within a given module.
 
@@ -295,7 +297,7 @@ class StorageManager:
 
         for name, format_cls in inspect.getmembers(module):
             if inspect.isclass(format_cls):
-                if format_cls not in self.BASE_CLASSES:
+                if format_cls not in BASE_CLASSES:
                     for parent in inspect.getmro(format_cls):
-                        if parent == sb.StorageBase:
+                        if parent == StorageBase:
                             return format_cls
