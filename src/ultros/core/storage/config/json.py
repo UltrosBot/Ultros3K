@@ -1,7 +1,7 @@
 # coding=utf-8
 
 """
-Class for INI-based configurations
+Class for JSON-based configurations
 """
 
 import json

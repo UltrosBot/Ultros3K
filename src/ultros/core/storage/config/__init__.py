@@ -38,6 +38,7 @@ Submodules
 
     base
     ini
+    json
 """
 
 __author__ = "Gareth Coles"
