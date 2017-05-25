@@ -27,6 +27,7 @@ BIN = "bin"
 CONF = "conf"
 INI = "ini"
 JSON = "json"
+PYTHON = "py"
 TOML = "toml"
 TXT = "txt"
 YML = "yml"
@@ -74,6 +75,8 @@ class FileFormats:
     +----------------+---------------------------+---------------+
     | .json          | JSON                      | Config & Data |
     +----------------+---------------------------+---------------+
+    | .py            | Python                    | Config only   |
+    +----------------+---------------------------+---------------+
     | .toml          | TOML                      | Config & Data |
     +----------------+---------------------------+---------------+
     | .txt           | Direct-access text file   | Data only     |
@@ -99,6 +102,12 @@ class FileFormats:
                 "JSON",
                 "ultros.core.storage.config.json",
                 "ultros.core.storage.data.json"
+            ),
+
+            PYTHON: Packages(
+                "Python",
+                "ultros.core.storage.config.python",
+                None
             ),
 
             TOML: Packages(
