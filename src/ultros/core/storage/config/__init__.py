@@ -40,6 +40,7 @@ Submodules
     ini
     json
     python
+    toml
 """
 
 __author__ = "Gareth Coles"
