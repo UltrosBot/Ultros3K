@@ -42,6 +42,7 @@ Submodules
     python
     toml
     yaml
+    yaml_roundtrip
 """
 
 __author__ = "Gareth Coles"

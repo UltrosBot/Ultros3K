@@ -130,7 +130,7 @@ class FileFormats:
 
             YML_ROUNDTRIP: Packages(
                 "YAML (Round-trip)",
-                "ultros.core.storage.config.yaml-roundtrip",
+                "ultros.core.storage.config.yaml_roundtrip",
                 None
             ),
         }
