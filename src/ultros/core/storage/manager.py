@@ -17,19 +17,10 @@ from typing import Optional, Any, Dict, List, Union
 
 from ultros.core import ultros as u
 
-from ultros.core.storage.base import StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, \
-    DictFunctionsMixin, MutableDictFunctionsMixin
-from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
-from ultros.core.storage.data.base import DataFile
-
+from ultros.core.storage.base import StorageBase
 from ultros.core.storage.formats import FileFormats
 
 __author__ = "Gareth Coles"
-
-BASE_CLASSES = [
-    StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
-    MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
-]
 
 
 class StorageManager:
@@ -56,6 +47,16 @@ class StorageManager:
 
     :ivar file_formats: A FileFormats object representing all supported formats
     """
+
+    from ultros.core.storage.base import MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, \
+        DictFunctionsMixin, MutableDictFunctionsMixin
+    from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
+    from ultros.core.storage.data.base import DataFile
+
+    BASE_CLASSES = [
+        StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
+        MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
+    ]
 
     config_location = None
     data_location = None
@@ -297,7 +298,7 @@ class StorageManager:
 
         for name, format_cls in inspect.getmembers(module):
             if inspect.isclass(format_cls):
-                if format_cls not in BASE_CLASSES:
+                if format_cls not in self.BASE_CLASSES:
                     for parent in inspect.getmro(format_cls):
                         if parent == StorageBase:
                             return format_cls
