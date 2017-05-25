@@ -11,7 +11,7 @@ As data files are expected to be modified often, these classes all provide mutab
 providing complex access mechanisms, however, you may simply use them as a context manager for ease
 of use. For example:
 
->>> x = ultros.storage_manager.get_data("test.yml")
+>>> x = ultros.core.storage_manager.get_data("test.yml")
 >>> with x:
 ...     x[1] = 2
 ...     x["a"]["b"] = "c"

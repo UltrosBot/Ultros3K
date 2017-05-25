@@ -12,6 +12,8 @@ from typing import Any, List, Dict, Union
 from ultros.core.storage.base import ItemAccessMixin
 from ultros.core.storage.config.base import ConfigFile
 
+from ultros.core.storage import manager as m
+
 __author__ = "Gareth Coles"
 
 
@@ -20,10 +22,8 @@ class INIConfig(ConfigFile, ItemAccessMixin):
     Class for INI-based configurations
     """
 
-    def __init__(self, owner: Any, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
-        super().__init__(owner, *args, **kwargs)
-
-        self.path = os.path.join(self.manager.data_location, path)
+    def __init__(self, owner: Any, manager: "m.StorageManager", path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        super().__init__(owner, manager, path, *args, **kwargs)
 
     def load(self):
         self.data = ConfigParser()
@@ -80,21 +80,21 @@ class INIConfig(ConfigFile, ItemAccessMixin):
 
         return self.data.get(section, option, raw=raw, vars=vars, fallback=fallback)
 
-    def getint(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> int:
+    def get_int(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> int:
         """
         Same as `get`, but the result will be coerced to an `int`.
         """
 
         return self.data.getint(section, option, raw=raw, vars=vars, fallback=fallback)
 
-    def getfloat(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> float:
+    def get_float(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> float:
         """
         Same as `get`, but the result will be coerced to a `float`.
         """
 
         return self.data.getfloat(section, option, raw=raw, vars=vars, fallback=fallback)
 
-    def getboolean(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> bool:
+    def get_boolean(self, section: str, option: str, *, raw=False, vars: dict=None, fallback=_UNSET) -> bool:
         """
         Same as `get`, but the result will be coerced to a `bool`.
 
@@ -138,7 +138,7 @@ class INIConfig(ConfigFile, ItemAccessMixin):
         Passing in a string here will return a ConfigParser section (which generally works like a dict too). However,
         you may also pass in a simple slice to get a specific option within a section.
 
-        >>> x = ultros.storage_manager.get_config("test.ini")
+        >>> x = ultros.core.storage_manager.get_config("test.ini")
         >>> x["x"]
         {"y": "z"}
         >>> x["x":"y"]
@@ -164,6 +164,8 @@ class INIConfig(ConfigFile, ItemAccessMixin):
     def __len__(self):
         """
         Wrapper for `ConfigParser.__len__()`
+        
+        Note that the default section is always counted, whether it exists or not.
         """
 
         return self.data.__len__()

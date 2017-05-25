@@ -15,8 +15,13 @@ __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner: Any, manager: "m.StorageManager", *args: List[Any], **kwargs: Dict[Any, Any]):
-        self._owner = ref(owner)
+    def __init__(self, owner: Any, manager: "m.StorageManager", path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        if owner:
+            self._owner = ref(owner)
+        else:
+            self._owner = lambda: None
+
+        self.path = path
         self._manager = ref(manager)
         self.callbacks = []
         self.data = {}

@@ -17,8 +17,8 @@ Packages = namedtuple("Packages", ("name", "config", "data"))
 
 _ini_package = Packages(  # DRY
     "INI",
-    "ultros.storage.config.ini",
-    "ultros.storage.data.ini"
+    "ultros.core.storage.config.ini",
+    "ultros.core.storage.data.ini"
 )
 
 # Constants for use in other packages that want to specify a format explicitly
@@ -51,8 +51,8 @@ class FileFormats:
 
     >>> x = Packages(
     ...     "INI",
-    ...     "ultros.storage.config.ini",
-    ...     "ultros.storage.data.ini"
+    ...     "ultros.core.storage.config.ini",
+    ...     "ultros.core.storage.data.ini"
     ... )
     >>>
 
@@ -89,7 +89,7 @@ class FileFormats:
             BIN: Packages(
                 "Binary File",
                 None,
-                "ultros.storage.data.binary"
+                "ultros.core.storage.data.binary"
             ),
 
             CONF: _ini_package,
@@ -97,31 +97,31 @@ class FileFormats:
 
             JSON: Packages(
                 "JSON",
-                "ultros.storage.config.json",
-                "ultros.storage.data.json"
+                "ultros.core.storage.config.json",
+                "ultros.core.storage.data.json"
             ),
 
             TOML: Packages(
                 "TOML",
-                "ultros.storage.config.toml",
-                "ultros.storage.data.toml"
+                "ultros.core.storage.config.toml",
+                "ultros.core.storage.data.toml"
             ),
 
             TXT: Packages(
                 "Text File",
                 None,
-                "ultros.storage.data.text"
+                "ultros.core.storage.data.text"
             ),
 
             YML: Packages(
                 "YAML",
-                "ultros.storage.config.yaml",
-                "ultros.storage.data.yaml"
+                "ultros.core.storage.config.yaml",
+                "ultros.core.storage.data.yaml"
             ),
 
             YML_ROUNDTRIP: Packages(
                 "YAML (Round-trip)",
-                "ultros.storage.config.yaml-roundtrip",
+                "ultros.core.storage.config.yaml-roundtrip",
                 None
             ),
         }

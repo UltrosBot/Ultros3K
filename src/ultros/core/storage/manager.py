@@ -16,10 +16,18 @@ import os
 from typing import Optional, Any, Dict, List, Union
 
 from ultros.core import ultros as u
-from ultros.core.storage.base import StorageBase, MutableStorageBase
+from ultros.core.storage.base import StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, \
+    DictFunctionsMixin, MutableDictFunctionsMixin
+from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
+from ultros.core.storage.data.base import DataFile
 from ultros.core.storage.formats import FileFormats
 
 __author__ = "Gareth Coles"
+
+BASE_CLASSES = [
+    StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
+    MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
+]
 
 
 class StorageManager:
@@ -138,20 +146,20 @@ class StorageManager:
         format_cls = self.get_class(_fmt)
 
         try:
-            obj = format_cls(owner, self, *args, **kwargs)  # TODO: Params
+            obj = format_cls(owner, self, path, *args, **kwargs)  # TODO: Params
             obj.load()
         except FileNotFoundError:  # Handle default config files
             if defaults_path is None:
                 return self.get_config(
-                    path + ".default", owner, fmt,
-                    defaults_path=False, args=args, kwargs=kwargs
+                    path + ".default", owner, _fmt,
+                    defaults_path=False, *args, **kwargs
                 )
             elif not defaults_path:
                 raise
             elif isinstance(defaults_path, str):
                 return self.get_config(
-                    defaults_path, owner, fmt,
-                    defaults_path=False, args=args, kwargs=kwargs
+                    defaults_path, owner, _fmt,
+                    defaults_path=False, *args, **kwargs
                 )
             else:
                 pass  # TODO: Exception
@@ -201,7 +209,7 @@ class StorageManager:
             return  # TODO: Exception (using fmt.name)
 
         format_cls = self.get_class(_fmt)
-        obj = format_cls(owner, self, *args, **kwargs)  # TODO: Params
+        obj = format_cls(owner, self, path, *args, **kwargs)  # TODO: Params
         obj.load()
 
         self.data_files[path] = obj
@@ -287,6 +295,7 @@ class StorageManager:
 
         for name, format_cls in inspect.getmembers(module):
             if inspect.isclass(format_cls):
-                for parent in inspect.getmro(format_cls):
-                    if parent == StorageBase:
-                        return format_cls
+                if format_cls not in BASE_CLASSES:
+                    for parent in inspect.getmro(format_cls):
+                        if parent == StorageBase:
+                            return format_cls
