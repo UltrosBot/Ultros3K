@@ -7,14 +7,14 @@ import tempfile
 from nose.tools import assert_equal, assert_true
 from unittest import TestCase
 
-from ultros.core.storage.config.json import JSONConfig
+from ultros.core.storage.config.python import PythonConfig
 from ultros.core.storage.manager import StorageManager
 
 
 __author__ = "Gareth Coles"
 
 
-class TestJSON(TestCase):
+class TestPython(TestCase):
     def setUp(self):
         self.directory = os.path.join(tempfile.gettempdir(), secrets.token_urlsafe(10))
 
@@ -33,7 +33,7 @@ class TestJSON(TestCase):
         current_dir = os.path.dirname(__file__)
         tests_dir = os.path.join(current_dir, "../../")
 
-        shutil.copy(os.path.join(tests_dir, "files/test.json"), os.path.join(self.config_dir, "test.json"))
+        shutil.copy(os.path.join(tests_dir, "files/test.py"), os.path.join(self.config_dir, "test.py"))
 
         self.manager = StorageManager(
             ultros=None,
@@ -50,24 +50,15 @@ class TestJSON(TestCase):
 
     def test_dict_functionality(self):
         """
-        JSON config testing: Dict functionality
+        Python config testing: Dict functionality
         """
 
-        def _config_object() -> JSONConfig:
+        def _config_object() -> PythonConfig:
             return self.manager.get_config(
-                "test.json", None
+                "test.py", None
             )
 
         config_obj = _config_object()
-
-        config_obj.clear()
-
-        assert_equal(
-            len(config_obj),
-            0
-        )
-
-        config_obj.reload()
 
         assert_equal(
             len(config_obj),
@@ -102,46 +93,6 @@ class TestJSON(TestCase):
         )
 
         assert_equal(
-            config_obj.pop("test"),
-            "test"
-        )
-
-        assert_equal(
-            list(config_obj.keys()),
-            ["herp", "int", "float", "boolean", "other_boolean"]
-        )
-
-        config_obj.reload()
-        config_obj.popitem()
-
-        assert_equal(
-            len(config_obj),
-            5
-        )
-
-        config_obj.reload()
-
-        assert_equal(
-            config_obj.setdefault("berp", "lerp"),
-            "lerp"
-        )
-
-        assert_equal(
-            config_obj.get("berp"),
-            "lerp"
-        )
-
-        config_obj.reload()
-        config_obj.update({"berp": "lerp"})
-
-        assert_equal(
-            config_obj.get("berp"),
-            "lerp"
-        )
-
-        config_obj.reload()
-
-        assert_equal(
             list(config_obj.values()),
             ["test", "derp", 1, 1.1, True, False]
         )
@@ -149,14 +100,6 @@ class TestJSON(TestCase):
         assert_true(
             "test" in config_obj
         )
-
-        del config_obj["test"]
-
-        assert_true(
-            "test" not in config_obj
-        )
-
-        config_obj.reload()
 
         assert_equal(
             config_obj["test"],
@@ -173,21 +116,14 @@ class TestJSON(TestCase):
             6
         )
 
-        config_obj["x"] = "y"
-
-        assert_equal(
-            config_obj["x"],
-            "y"
-        )
-
     def test_read(self):
         """
-        JSON config testing: Reading
+        Python config testing: Reading
         """
 
-        def _config_object() -> JSONConfig:
+        def _config_object() -> PythonConfig:
             return self.manager.get_config(
-                "test.json", None
+                "test.py", None
             )
 
         config_obj = _config_object()
@@ -220,62 +156,4 @@ class TestJSON(TestCase):
         assert_equal(
             config_obj["other_boolean"],
             False
-        )
-
-    def test_write(self):
-        """
-        JSON config testing: Writing
-        """
-
-        def _config_object() -> JSONConfig:
-            return self.manager.get_config(
-                "test.json", None
-            )
-
-        config_obj = _config_object()
-
-        with config_obj:
-            config_obj["test"] = "test2"
-            config_obj["int"] = 2
-            config_obj["float"] = 2.2
-            config_obj["boolean"] = False
-            config_obj["other_boolean"] = True
-            config_obj["list"] = ["herp"]
-            config_obj["dict"] = {"herp": "derp"}
-
-        config_obj.reload()
-
-        assert_equal(
-            config_obj["test"],
-            "test2"
-        )
-
-        assert_equal(
-            config_obj["int"],
-            2
-        )
-
-        assert_equal(
-            config_obj["float"],
-            2.2
-        )
-
-        assert_equal(
-            config_obj["boolean"],
-            False
-        )
-
-        assert_equal(
-            config_obj["other_boolean"],
-            True
-        )
-
-        assert_equal(
-            config_obj["list"],
-            ["herp"]
-        )
-
-        assert_equal(
-            config_obj["dict"],
-            {"herp": "derp"}
         )

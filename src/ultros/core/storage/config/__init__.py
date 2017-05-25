@@ -39,6 +39,7 @@ Submodules
     base
     ini
     json
+    python
 """
 
 __author__ = "Gareth Coles"

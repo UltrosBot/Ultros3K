@@ -4,8 +4,6 @@
 Class for INI-based configurations
 """
 
-import os
-
 from configparser import ConfigParser, _UNSET
 from typing import Any, List, Dict, Union
 
