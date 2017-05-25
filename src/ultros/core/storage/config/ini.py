@@ -164,7 +164,7 @@ class INIConfig(ConfigFile, ItemAccessMixin):
     def __len__(self):
         """
         Wrapper for `ConfigParser.__len__()`
-        
+
         Note that the default section is always counted, whether it exists or not.
         """
 
