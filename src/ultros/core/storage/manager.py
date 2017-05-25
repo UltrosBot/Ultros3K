@@ -17,7 +17,7 @@ from typing import Optional, Any, Dict, List, Union
 
 from ultros.core import ultros as u
 
-from ultros.core.storage.base import StorageBase
+from ultros.core.storage import base as sb
 from ultros.core.storage.formats import FileFormats
 
 __author__ = "Gareth Coles"
@@ -54,7 +54,7 @@ class StorageManager:
     from ultros.core.storage.data.base import DataFile
 
     BASE_CLASSES = [
-        StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
+        sb.StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
         MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
     ]
 
@@ -96,7 +96,7 @@ class StorageManager:
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]
-                   ) -> Optional[StorageBase]:
+                   ) -> Optional[sb.StorageBase]:
         """
         Attempts to load a config file (if it isn't already loaded) and
         returns it to you.
@@ -221,7 +221,7 @@ class StorageManager:
 
     def get_database(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                      args: List[Any]=None, kwargs: Dict[Any, Any]=None
-                     ) -> StorageBase:
+                     ) -> sb.StorageBase:
         """
         This function has not been finalized yet.
 
@@ -282,7 +282,7 @@ class StorageManager:
         """
         pass
 
-    def get_class(self, package: str) -> Optional[type(StorageBase)]:
+    def get_class(self, package: str) -> Optional[type(sb.StorageBase)]:
         """
         Load a storage object class by searching for it within a given module.
 
@@ -300,5 +300,5 @@ class StorageManager:
             if inspect.isclass(format_cls):
                 if format_cls not in self.BASE_CLASSES:
                     for parent in inspect.getmro(format_cls):
-                        if parent == StorageBase:
+                        if parent == sb.StorageBase:
                             return format_cls
