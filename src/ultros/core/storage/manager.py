@@ -18,6 +18,8 @@ from typing import Optional, Any, Dict, List, Union
 from ultros.core import ultros as u
 
 from ultros.core.storage import base as sb
+from ultros.core.storage.config import base as cb
+from ultros.core.storage.data import base as db
 from ultros.core.storage.formats import FileFormats
 
 __author__ = "Gareth Coles"
@@ -48,14 +50,9 @@ class StorageManager:
     :ivar file_formats: A FileFormats object representing all supported formats
     """
 
-    from ultros.core.storage.base import ItemAccessMixin, MutableItemAccessMixin, \
-        DictFunctionsMixin, MutableDictFunctionsMixin
-    from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
-    from ultros.core.storage.data.base import DataFile
-
     BASE_CLASSES = [
-        sb.StorageBase, sb.MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
-        MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
+        sb.StorageBase, sb.MutableStorageBase, sb.ItemAccessMixin, sb.MutableItemAccessMixin, sb.DictFunctionsMixin,
+        sb.MutableDictFunctionsMixin, cb.ConfigFile, cb.MutableConfigFile, db.DataFile
     ]
 
     config_location = None
