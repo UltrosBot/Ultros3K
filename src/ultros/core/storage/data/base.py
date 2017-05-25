@@ -7,7 +7,6 @@ from abc import ABCMeta
 from typing import Any, List, Dict
 
 from ultros.core.storage.base import MutableStorageBase
-from ultros.core.storage import manager as m
 
 __author__ = "Gareth Coles"
 
@@ -17,7 +16,7 @@ class DataFile(MutableStorageBase, metaclass=ABCMeta):
     Base class representing any data file
     """
 
-    def __init__(self, owner: Any, manager: "m.StorageManager", path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+    def __init__(self, owner: Any, manager: "ultros.core.storage.manager.StorageManager", path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
         super().__init__(owner, manager, path, *args, **kwargs)
 
         self.path = os.path.join(self.manager.data_location, self.path)
