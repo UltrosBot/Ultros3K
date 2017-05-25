@@ -13,6 +13,14 @@ __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
+    """
+    Base class representing any storage file
+
+    If you're writing a new storage class, don't subclass this one - subclass one of the relevant
+    superclasses from the base modules of the type of storage you're working with. For example,
+    `ultros.core.storage.config.base.ConfigFile`.
+    """
+
     def __init__(self, owner: Any, manager, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
         if owner:
             self._owner = ref(owner)
@@ -34,26 +42,49 @@ class StorageBase(metaclass=ABCMeta):
 
     @abstractmethod
     def load(self):
-        pass
+        """
+        Load up all needed data
+
+        This will be called by the storage manager automatically
+        """
 
     @abstractmethod
     def reload(self):
-        pass
+        """
+        Reload all needed data
+        """
 
     @abstractmethod
     def unload(self):
-        pass
+        """
+        Unload all stored data
+        """
 
     def run_callbacks(self):
+        """
+        Run all callbacks registered for this storage object
+
+        This function is not finalized.
+        """
         # TODO: Think about this
         for callback in self.callbacks:
             callback(self)
 
 
 class MutableStorageBase(StorageBase, AbstractContextManager, metaclass=ABCMeta):
+    """
+    Base class representing any mutable storage file
+
+    This provides a default implementation of the context manager protocol that automatically calls `.save()` if
+    the context manager is exited without raising any exceptions. We recommend not overriding this unless absolutely
+    necessary, as it is expected behavior for all mutable storage files.
+    """
+
     @abstractmethod
     def save(self):
-        pass
+        """
+        Save all stored data to disk
+        """
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if not any((exc_type, exc_val, exc_tb)):
@@ -63,6 +94,12 @@ class MutableStorageBase(StorageBase, AbstractContextManager, metaclass=ABCMeta)
 
 
 class ItemAccessMixin(metaclass=ABCMeta):
+    """
+    A mixin providing abstract methods that are required for item-style data access
+
+    You should implement this if you support `x["something"]` or `x[1:2:3]` for example.
+    """
+
     @abstractmethod
     def __contains__(self, item):
         """
@@ -93,6 +130,12 @@ class ItemAccessMixin(metaclass=ABCMeta):
 
 
 class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
+    """
+    A mixin providing abstract methods that are required for item-style data access and modification
+
+    You should implement this if you support `x["something"] = "other"` for example.
+    """
+
     @abstractmethod
     def __delitem__(self, key):
         """
@@ -109,6 +152,12 @@ class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
 
 
 class DictFunctionsMixin(metaclass=ABCMeta):
+    """
+    A mixin providing read-only abstract methods that mimic those that are provided by dicts by default
+
+    You should implement this if you want to emulate the behavior of a dict
+    """
+
     @abstractmethod
     def copy(self):
         """
@@ -147,6 +196,13 @@ class DictFunctionsMixin(metaclass=ABCMeta):
 
 
 class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
+    """
+    A mixin providing abstract methods that mimic those that are provided by dicts by default, including those that
+    modify the dict
+
+    You should implement this if you want to emulate the behavior of a dict
+    """
+
     @abstractmethod
     def clear(self):
         """
