@@ -29,6 +29,9 @@ class JSONConfig(MutableConfigFile, MutableItemAccessMixin, MutableDictFunctions
             self.data = json.load(fh)
 
     def save(self):
+        if not self.mutable:
+            raise RuntimeError("You may not modify a defaults file at runtime - check the mutable attribute!")
+
         with open(self.path, "w") as fh:
             json.dump(self.data, fh, indent=2)
 

@@ -31,5 +31,12 @@ class ConfigFile(StorageBase, metaclass=ABCMeta):
 class MutableConfigFile(ConfigFile, MutableStorageBase, metaclass=ABCMeta):
     """
     Base class representing any *mutable* config file
+
+    Note that mutable config files are not mutable if the filename ends with ".default", and will raise an exception
+    if you attempt to call `.save()` - check `.mutable` if you need to be aware of this.
     """
-    pass
+
+    def __init__(self, owner: Any, manager, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        super().__init__(owner, manager, path, *args, **kwargs)
+
+        self.mutable = not path.endswith(".default")

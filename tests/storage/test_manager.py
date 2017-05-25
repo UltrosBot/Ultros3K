@@ -35,6 +35,7 @@ class TestManager(TestCase):
 
         shutil.copy(os.path.join(tests_dir, "files/test.ini"), os.path.join(self.config_dir, "test.ini"))
         shutil.copy(os.path.join(tests_dir, "files/test.ini"), os.path.join(self.config_dir, "test2.ini.default"))
+        shutil.copy(os.path.join(tests_dir, "files/test.json"), os.path.join(self.config_dir, "test.json.default"))
 
         self.manager = StorageManager(
             ultros=None,
@@ -104,6 +105,13 @@ class TestManager(TestCase):
                 default_path, default_config_obj.path
             )
         )
+
+        default_json_config_obj = self.manager.get_config(
+            "test.json", None
+        )
+
+        with assert_raises(RuntimeError):
+            default_json_config_obj.save()
 
         with assert_raises(FileNotFoundError):
             self.manager.get_config(

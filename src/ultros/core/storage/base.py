@@ -22,6 +22,8 @@ class StorageBase(metaclass=ABCMeta):
     """
 
     def __init__(self, owner: Any, manager, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        self.mutable = False
+
         if owner:
             self._owner = ref(owner)
         else:
@@ -78,19 +80,30 @@ class MutableStorageBase(StorageBase, AbstractContextManager, metaclass=ABCMeta)
     This provides a default implementation of the context manager protocol that automatically calls `.save()` if
     the context manager is exited without raising any exceptions. We recommend not overriding this unless absolutely
     necessary, as it is expected behavior for all mutable storage files.
+
+    Note that mutable config files are not mutable if the filename ends with ".default", and will raise an exception
+    if you attempt to call `.save()` - check `.mutable` if you need to be aware of this.
     """
+
+    def __init__(self, owner: Any, manager, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        super().__init__(owner, manager, path, *args, **kwargs)
+
+        self.mutable = True
 
     @abstractmethod
     def save(self):
         """
         Save all stored data to disk
+
+        If you're writing a handler for mutable config files, you should check `.mutable` and raise a RuntimeError
+        if it is false instead of saving - this is because defaults files should never be modified at runtime.
         """
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if not any((exc_type, exc_val, exc_tb)):
             # Everything is None; no errors - we can save
-
-            self.save()
+            if self.mutable:
+                self.save()
 
 
 class ItemAccessMixin(metaclass=ABCMeta):
