@@ -18,7 +18,7 @@ class ConfigFile(StorageBase, metaclass=ABCMeta):
     Base class representing any config file
     """
 
-    def __init__(self, owner: Any, manager: "ultros.core.storage.manager.StorageManager", path: str, *args: List[Any],
+    def __init__(self, owner: Any, manager, path: str, *args: List[Any],
                  **kwargs: Dict[Any, Any]):
         super().__init__(owner, manager, path, *args, **kwargs)
 
