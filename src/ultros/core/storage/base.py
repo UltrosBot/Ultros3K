@@ -6,14 +6,17 @@ Base classes for storage formats
 
 from abc import ABCMeta, abstractmethod
 from contextlib import AbstractContextManager
-from typing import Any, List, Dict
+from typing import Any, List, Dict, TYPE_CHECKING
 from weakref import ref
+
+if TYPE_CHECKING:
+    from ultros.core.storage.manager import StorageManager
 
 __author__ = "Gareth Coles"
 
 
 class StorageBase(metaclass=ABCMeta):
-    def __init__(self, owner: Any, manager: "ultros.core.storage.manager.StorageManager", path: str,
+    def __init__(self, owner: Any, manager: "StorageManager", path: str,
                  *args: List[Any], **kwargs: Dict[Any, Any]):
         if owner:
             self._owner = ref(owner)
@@ -30,7 +33,7 @@ class StorageBase(metaclass=ABCMeta):
         return self._owner()
 
     @property
-    def manager(self):
+    def manager(self) -> "StorageManager":
         return self._manager()
 
     @abstractmethod
