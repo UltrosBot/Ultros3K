@@ -40,7 +40,7 @@ class DatabaseFormats:
     """
     Contains information about what databases are supported and where to look for a class that can handle
     that database.
-    
+
     Each database type is associated with a keyword, and that points to a package containing the relevant class.
     When a database implementation is requested from the storage manager, it will load the module and scan it for
     the first class that implements StorageBase. That class is then instantiated and used as the storage object.
@@ -57,7 +57,7 @@ class DatabaseFormats:
     def add_format(self, name: str, module: str) -> bool:
         """
         Register a supported format, if the it hasn't already been registered.
-        
+
         :return: False if the format was already registered, otherwise True
         """
 

@@ -231,14 +231,14 @@ class StorageManager:
                      ) -> Optional[DatabaseStorageBase]:
         """
         Attempts to load a database abstraction (if it wasn't already loaded) and returns it to you.
-        
+
         * The **owner** is optional, but should be supplied if you are writing
           a plugin, protocol, or other unloadable object. This allows the file
           to be cleaned up automatically.
 
         :param url: Database URL/URI to pass to the database driver (eg, `"sqlite:///test.db"`)
         :param owner: Object that owns the database, or None
-        :param fmt: An explicit database format - defaults to "sqlalchemy", which is suitable for most relational 
+        :param fmt: An explicit database format - defaults to "sqlalchemy", which is suitable for most relational
                     databases
         :param args: Extra arguments to pass to the underlying storage object
         :param kwargs: Extra keyword arguments to pass to the underlying storage object
