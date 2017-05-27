@@ -12,7 +12,25 @@ from weakref import ref
 __author__ = "Gareth Coles"
 
 
-class FileStorageBase(metaclass=ABCMeta):
+class StorageBase:
+    """
+    Base classes that each storage object must inherit at some point to be loadable by the storage manager.
+
+    Currently we have three types of storage - config, data and database. Config and data are both file-backed and
+    thus all inherit `FileStorageBase`. Databases are not necessarily file-backed, and inherit DatabaseStorageBase`
+    instead.
+    """
+
+
+class DatabaseStorageBase(StorageBase):
+    """
+    Base class representing any database
+
+    This class has not been finalized yet.
+    """
+
+
+class FileStorageBase(StorageBase, metaclass=ABCMeta):
     """
     Base class representing any storage file
 

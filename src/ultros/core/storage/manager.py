@@ -18,7 +18,8 @@ from typing import Optional, Any, Dict, List, Union
 from ultros.core import ultros as u
 
 from ultros.core.storage.base import FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, \
-    MutableAbstractItemAccessMixin, AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin
+    MutableAbstractItemAccessMixin, AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin, StorageBase, \
+    DatabaseStorageBase
 from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
 from ultros.core.storage.data.base import DataFile
 
@@ -28,7 +29,8 @@ __author__ = "Gareth Coles"
 
 BASE_CLASSES = [
     FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, MutableAbstractItemAccessMixin,
-    AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
+    AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile,
+    StorageBase, DatabaseStorageBase
 ]
 
 
@@ -303,5 +305,5 @@ class StorageManager:
             if inspect.isclass(format_cls):
                 if format_cls not in BASE_CLASSES:
                     for parent in inspect.getmro(format_cls):
-                        if parent == FileStorageBase:
+                        if parent == StorageBase:
                             return format_cls
