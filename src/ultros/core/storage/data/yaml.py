@@ -28,7 +28,7 @@ class YAMLData(DataFile, MutableAbstractItemAccessMixin, MutableAbstractDictFunc
     def load(self):
         if os.path.exists(self.path):
             with open(self.path, "r") as fh:
-                self.data = yaml.load(fh, version=(1, 2))
+                self.data = yaml.load(fh, version=(1, 2), Loader=yaml.Loader)
         else:
             self.data = {}
 
