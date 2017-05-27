@@ -15,15 +15,15 @@ __author__ = "Gareth Coles"
 class SQLADatabase(RelationalDatabase):
     """
     SQLAlchemy-based class for relational databases, powered by SQLAlchemy-AIO
-    
+
     This is an asyncio-powered SQLAlchemy wrapper with a very light API. We used `sqlalchemy_aio` under the hood; more
     documentation on that can be found here: https://github.com/RazerM/sqlalchemy_aio
-    
+
     Note that this abstraction means that you can't use the ORM. If an ORM is really required, we will create
     another API wrapper for you - but note that it will not be asynchronous and may end up blocking
     some of your functions and overall harming the responsiveness of Ultros as a result. Raise a ticket if you
     want to look into this further.
-    
+
     Example usage:
 
     >>> db = ultros.storage_manager.get_database(
@@ -44,7 +44,7 @@ class SQLADatabase(RelationalDatabase):
     ...     for user in d_users:
     ...         logger.info("User: {}".format(user[users.c.name]))
     >>>
-    
+
     For more information on this, you can check out the SQLAlchemy documentation, the documentation for
     `sqlalchemy_aio`, or our unit tests.
     """
@@ -70,7 +70,15 @@ class SQLADatabase(RelationalDatabase):
         self.metadata = None
 
     async def execute(self, *args, **kwargs):
+        """
+        Wrapper for `engine.execute()`
+        """
+
         return await self.engine.execute(*args, **kwargs)
 
     def get_connection(self) -> Coroutine:
+        """
+        Return a coroutine that will result in a new connection
+        """
+
         return self.engine.connect()
