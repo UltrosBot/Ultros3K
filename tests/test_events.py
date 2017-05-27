@@ -4,7 +4,7 @@ import inspect
 from functools import partial
 
 from ultros.core.events.constants import EventPriority
-from ultros.core.events.definitions.general import Event, PluginEvent, ProtocolEvent
+from ultros.core.events.definitions.general import Event, PluginEvent, NetworkEvent
 from ultros.core.events.definitions.meta import EventMeta
 from ultros.core.events.manager import EventManager
 
@@ -339,7 +339,7 @@ class TestEvents(TestCase):
         class PluginBaseEvent(PluginEvent, metaclass=EventMeta):
             pass
 
-        class ProtocolBaseEvent(ProtocolEvent, metaclass=EventMeta):
+        class NetworkBaseEvent(NetworkEvent, metaclass=EventMeta):
             pass
 
         # Check identifier
@@ -362,8 +362,8 @@ class TestEvents(TestCase):
             base_identifier + ".PluginBaseEvent"
         )
         assert_equal(
-            ProtocolBaseEvent.identifier,
-            base_identifier + ".ProtocolBaseEvent"
+            NetworkBaseEvent.identifier,
+            base_identifier + ".NetworkBaseEvent"
         )
 
         # Check this matches when init is run also
@@ -372,8 +372,8 @@ class TestEvents(TestCase):
             base_identifier + ".PluginBaseEvent"
         )
         assert_equal(
-            ProtocolBaseEvent(None).identifier,
-            base_identifier + ".ProtocolBaseEvent"
+            NetworkBaseEvent(None).identifier,
+            base_identifier + ".NetworkBaseEvent"
         )
 
         # Check identifiers

@@ -47,11 +47,11 @@ class PluginEvent(Event):
         self.plugin = plugin
 
 
-class ProtocolEvent(Event):
+class NetworkEvent(Event):
     """
-    An event that's been fired from a protocol.
+    An event that's been fired from a network.
 
-    Any protocols that fire events should subclass from this.
+    Any network that fire events should subclass from this.
     """
 
     def __init__(self, protocol):  # TODO: Typing
