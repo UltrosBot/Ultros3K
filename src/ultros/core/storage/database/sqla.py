@@ -35,12 +35,12 @@ class SQLADatabase(RelationalDatabase):
     ...     Column("name", String())
     ... )
     >>> async def some_function():
-    ...     db.execute(CreateTable(users))
+    ...     await db.execute(CreateTable(users))
     ...     with db.get_connection() as conn:
     ...         await conn.execute(users.insert().values(name="Pippi"))
     ...         await conn.execute(users.insert().values(name="Hatsune Miku"))
     ...         result = await conn.execute(users.select(user.c.name.startswith("H")))
-    ...         d_users = result.fetchall()
+    ...         d_users = await result.fetchall()
     ...     for user in d_users:
     ...         logger.info("User: {}".format(user[users.c.name]))
     >>>
