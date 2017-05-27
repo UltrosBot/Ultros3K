@@ -1,8 +1,18 @@
 # coding=utf-8
-from ultros.core.storage.base import MutableFileStorageBase
+from abc import ABCMeta
+
+from ultros.core.storage.base import DatabaseStorageBase
 
 __author__ = "Gareth Coles"
 
 
-class Database(MutableFileStorageBase):
+class RelationalDatabase(DatabaseStorageBase, metaclass=ABCMeta):
+    pass
+
+
+class DocumentOrientedDatabase(DatabaseStorageBase, metaclass=ABCMeta):
+    pass
+
+
+class OtherDatabase(DatabaseStorageBase, metaclass=ABCMeta):
     pass

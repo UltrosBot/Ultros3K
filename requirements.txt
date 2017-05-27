@@ -1,3 +1,5 @@
 websockets
 ruamel.yaml
 toml
+sqlalchemy
+sqlalchemy-aio

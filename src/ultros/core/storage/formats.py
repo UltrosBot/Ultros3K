@@ -31,6 +31,55 @@ TOML = "toml"
 YML = "yml"
 YML_ROUNDTRIP = "yml-roundtrip"
 
+# Constants for database type names
+
+DB_SQLALCHEMY = "sqlalchemy"
+
+
+class DatabaseFormats:
+    """
+    Contains information about what databases are supported and where to look for a class that can handle
+    that database.
+    
+    Each database type is associated with a keyword, and that points to a package containing the relevant class.
+    When a database implementation is requested from the storage manager, it will load the module and scan it for
+    the first class that implements StorageBase. That class is then instantiated and used as the storage object.
+    """
+
+    def __init__(self):
+        self._databases = {
+            DB_SQLALCHEMY: "ultros.core.storage.database.sqla"
+        }
+
+    def get_format(self, name):
+        return self._databases.get(name)
+
+    def add_format(self, name: str, module: str) -> bool:
+        """
+        Register a supported format, if the it hasn't already been registered.
+        
+        :return: False if the format was already registered, otherwise True
+        """
+
+        if name in self._databases:
+            return False
+
+        self._databases[name] = module
+        return True
+
+    def remove_format(self, name: str) -> bool:
+        """
+        Remove an already-registered format by name, if it exists.
+
+        :return: False if the format isn't registered, True otherwise
+        """
+
+        if name not in self._databases:
+            return False
+
+        del self._databases[name]
+        return True
+
 
 class FileFormats:
     """

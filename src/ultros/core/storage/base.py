@@ -21,13 +21,46 @@ class StorageBase:
     instead.
     """
 
+    @property
+    def owner(self):
+        return self._owner()
 
-class DatabaseStorageBase(StorageBase):
+    @property
+    def manager(self):
+        return self._manager()
+
+    def __init__(self, owner: Any, manager):
+        if owner:
+            self._owner = ref(owner)
+        else:
+            self._owner = lambda: None
+
+        self._manager = ref(manager)
+
+
+class DatabaseStorageBase(StorageBase, metaclass=ABCMeta):
     """
     Base class representing any database
 
     This class has not been finalized yet.
     """
+
+    def __init__(self, owner: Any, manager, url: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        super().__init__(owner, manager)
+
+        self._url = url
+
+    @abstractmethod
+    def load(self):
+        """
+        Load up everything you need to start creating database transactions
+        """
+
+    @abstractmethod
+    def unload(self):
+        """
+        Clean up and shut down all connections
+        """
 
 
 class FileStorageBase(StorageBase, metaclass=ABCMeta):
@@ -40,25 +73,12 @@ class FileStorageBase(StorageBase, metaclass=ABCMeta):
     """
 
     def __init__(self, owner: Any, manager, path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
+        super().__init__(owner, manager)
+
         self.mutable = False
-
-        if owner:
-            self._owner = ref(owner)
-        else:
-            self._owner = lambda: None
-
         self.path = path
-        self._manager = ref(manager)
         self.callbacks = []
         self.data = {}
-
-    @property
-    def owner(self):
-        return self._owner()
-
-    @property
-    def manager(self):
-        return self._manager()
 
     @abstractmethod
     def load(self):

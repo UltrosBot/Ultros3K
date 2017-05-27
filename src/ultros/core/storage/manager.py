@@ -22,15 +22,16 @@ from ultros.core.storage.base import FileStorageBase, MutableFileStorageBase, Ab
     DatabaseStorageBase
 from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
 from ultros.core.storage.data.base import DataFile
+from ultros.core.storage.database.base import RelationalDatabase, OtherDatabase, DocumentOrientedDatabase
 
-from ultros.core.storage.formats import FileFormats
+from ultros.core.storage.formats import FileFormats, DatabaseFormats
 
 __author__ = "Gareth Coles"
 
 BASE_CLASSES = [
     FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, MutableAbstractItemAccessMixin,
     AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile,
-    StorageBase, DatabaseStorageBase
+    StorageBase, DatabaseStorageBase, RelationalDatabase, DocumentOrientedDatabase, OtherDatabase
 ]
 
 
@@ -81,6 +82,7 @@ class StorageManager:
         self.config_location = os.path.normpath(config_location)
         self.data_location = os.path.normpath(data_location)
         self.file_formats = FileFormats()
+        self.database_formats = DatabaseFormats()
 
         self.data_files = {}
         self.config_files = {}
@@ -224,20 +226,40 @@ class StorageManager:
 
         return obj
 
-    def get_database(self, path: str, owner: Any=None, fmt: Optional[str]=None,
-                     args: List[Any]=None, kwargs: Dict[Any, Any]=None
-                     ) -> FileStorageBase:
+    def get_database(self, url: str, owner: Any=None, fmt: str="sqlalchemy",
+                     *args: List[Any], **kwargs: Dict[Any, Any]
+                     ) -> Optional[DatabaseStorageBase]:
         """
-        This function has not been finalized yet.
+        Attempts to load a database abstraction (if it wasn't already loaded) and returns it to you.
+        
+        * The **owner** is optional, but should be supplied if you are writing
+          a plugin, protocol, or other unloadable object. This allows the file
+          to be cleaned up automatically.
 
-        :param path:
-        :param owner:
-        :param fmt:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        pass
+        :param url: Database URL/URI to pass to the database driver (eg, `"sqlite:///test.db"`)
+        :param owner: Object that owns the database, or None
+        :param fmt: An explicit database format - defaults to "sqlalchemy", which is suitable for most relational 
+                    databases
+        :param args: Extra arguments to pass to the underlying storage object
+        :param kwargs: Extra keyword arguments to pass to the underlying storage object
+        :return:A storage object, or None if the format isn't found (these will be exceptions later)
+        """  # TODO: Edit this when we use exceptions
+
+        if url in self.databases:
+            return self.databases[url]
+
+        _fmt = self.database_formats.get_format(fmt)
+
+        if _fmt is None:  # No idea what that database format is
+            return  # TODO: Exception
+
+        format_cls = self.get_class(_fmt)
+        obj = format_cls(owner, self, url, *args, **kwargs)  # TODO: Params
+        obj.load()
+
+        self.databases[url] = obj
+
+        return obj
 
     def unload_data(self, path: str) -> bool:
         """
@@ -287,7 +309,7 @@ class StorageManager:
         """
         pass
 
-    def get_class(self, package: str) -> Optional[type(FileStorageBase)]:
+    def get_class(self, package: str) -> Union[type(FileStorageBase), type(DatabaseStorageBase), None]:
         """
         Load a storage object class by searching for it within a given module.
 
