@@ -8,15 +8,14 @@ from ruamel import yaml
 
 from typing import Any, List, Dict
 
-from ultros.core.storage.base import ItemAccessMixin, DictFunctionsMixin
-from ultros.core.storage.config.base import ConfigFile
-
 from ultros.core.storage import manager as m
+from ultros.core.storage.base import AbstractItemAccessMixin, AbstractDictFunctionsMixin
+from ultros.core.storage.config.base import ConfigFile
 
 __author__ = "Gareth Coles"
 
 
-class YAMLConfig(ConfigFile, ItemAccessMixin, DictFunctionsMixin):
+class YAMLConfig(ConfigFile, AbstractItemAccessMixin, AbstractDictFunctionsMixin):
     """
     Class for YAML-based (non-roundtrip) configurations
     """

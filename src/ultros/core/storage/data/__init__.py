@@ -34,6 +34,10 @@ Submodules
     :toctree: data
 
     base
+    ini
+    json
+    toml
+    yaml
 """
 
 __author__ = "Gareth Coles"

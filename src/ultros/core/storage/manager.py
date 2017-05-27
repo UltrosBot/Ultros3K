@@ -17,8 +17,8 @@ from typing import Optional, Any, Dict, List, Union
 
 from ultros.core import ultros as u
 
-from ultros.core.storage.base import StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, \
-    DictFunctionsMixin, MutableDictFunctionsMixin
+from ultros.core.storage.base import FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, \
+    MutableAbstractItemAccessMixin, AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin
 from ultros.core.storage.config.base import ConfigFile, MutableConfigFile
 from ultros.core.storage.data.base import DataFile
 
@@ -27,8 +27,8 @@ from ultros.core.storage.formats import FileFormats
 __author__ = "Gareth Coles"
 
 BASE_CLASSES = [
-    StorageBase, MutableStorageBase, ItemAccessMixin, MutableItemAccessMixin, DictFunctionsMixin,
-    MutableDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
+    FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, MutableAbstractItemAccessMixin,
+    AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin, ConfigFile, MutableConfigFile, DataFile
 ]
 
 
@@ -95,7 +95,7 @@ class StorageManager:
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]
-                   ) -> Optional[StorageBase]:
+                   ) -> Optional[FileStorageBase]:
         """
         Attempts to load a config file (if it isn't already loaded) and
         returns it to you.
@@ -127,6 +127,8 @@ class StorageManager:
                  invalid value is supplied for defaults_path (these will be
                  exceptions later)
         """  # TODO: Edit this when we use exceptions
+
+        # TODO: Modify path based on owner
 
         if path in self.config_files:
             # File already loaded at some point
@@ -173,7 +175,7 @@ class StorageManager:
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                  *args: List[Any], **kwargs: Dict[Any, Any]
-                 ) -> Optional[MutableStorageBase]:
+                 ) -> Optional[MutableFileStorageBase]:
         """
         Attempts to load a data file (if it isn't already loaded) and
         returns it to you.
@@ -192,6 +194,8 @@ class StorageManager:
         :return: A storage object, or None if the format isn't found or
                  doesn't support config files (these will be exceptions later)
         """  # TODO: Edit this when we use exceptions
+
+        # TODO: Modify path based on owner
 
         if path in self.data_files:
             # File already loaded at some point
@@ -220,7 +224,7 @@ class StorageManager:
 
     def get_database(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                      args: List[Any]=None, kwargs: Dict[Any, Any]=None
-                     ) -> StorageBase:
+                     ) -> FileStorageBase:
         """
         This function has not been finalized yet.
 
@@ -281,7 +285,7 @@ class StorageManager:
         """
         pass
 
-    def get_class(self, package: str) -> Optional[type(StorageBase)]:
+    def get_class(self, package: str) -> Optional[type(FileStorageBase)]:
         """
         Load a storage object class by searching for it within a given module.
 
@@ -299,5 +303,5 @@ class StorageManager:
             if inspect.isclass(format_cls):
                 if format_cls not in BASE_CLASSES:
                     for parent in inspect.getmro(format_cls):
-                        if parent == StorageBase:
+                        if parent == FileStorageBase:
                             return format_cls

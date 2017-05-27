@@ -1,39 +1,39 @@
 # coding=utf-8
 
 """
-Class for JSON-based configurations
+Class for TOML-based data files
 """
-
-import json
+import os
+import toml
 
 from typing import Any, List, Dict
 
 from ultros.core.storage import manager as m
-from ultros.core.storage.base import MutableAbstractItemAccessMixin, MutableAbstractDictFunctionsMixin
-from ultros.core.storage.config.base import MutableConfigFile
+from ultros.core.storage.base import MutableAbstractDictFunctionsMixin, MutableAbstractItemAccessMixin
+from ultros.core.storage.data.base import DataFile
 
 __author__ = "Gareth Coles"
 
 
-class JSONConfig(MutableConfigFile, MutableAbstractItemAccessMixin, MutableAbstractDictFunctionsMixin):
+class TOMLData(DataFile, MutableAbstractItemAccessMixin, MutableAbstractDictFunctionsMixin):
     """
-    Class for JSON-based configurations
+    Class for TOML-based data files
     """
 
     def __init__(self, owner: Any, manager: "m.StorageManager", path: str, *args: List[Any], **kwargs: Dict[Any, Any]):
         self.data = {}
+
         super().__init__(owner, manager, path, *args, **kwargs)
 
     def load(self):
-        with open(self.path, "r") as fh:
-            self.data = json.load(fh)
+        if os.path.exists(self.path):
+            self.data = toml.load(self.path)
+        else:
+            self.data = {}
 
     def save(self):
-        if not self.mutable:
-            raise RuntimeError("You may not modify a defaults file at runtime - check the mutable attribute!")
-
         with open(self.path, "w") as fh:
-            json.dump(self.data, fh, indent=2)
+            toml.dump(self.data, fh)
 
     def reload(self):
         self.unload()

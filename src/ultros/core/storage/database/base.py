@@ -1,8 +1,8 @@
 # coding=utf-8
-from ultros.core.storage.base import MutableStorageBase
+from ultros.core.storage.base import MutableFileStorageBase
 
 __author__ = "Gareth Coles"
 
 
-class Database(MutableStorageBase):
+class Database(MutableFileStorageBase):
     pass

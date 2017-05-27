@@ -15,21 +15,19 @@ example:
 
 """
 
-from ruamel import yaml
-
 from typing import Any, List, Dict
 
+from ruamel import yaml
 from ruamel.yaml.comments import CommentedMap, NoComment
 
-from ultros.core.storage.base import MutableDictFunctionsMixin, MutableItemAccessMixin
-from ultros.core.storage.config.base import MutableConfigFile
-
 from ultros.core.storage import manager as m
+from ultros.core.storage.base import MutableAbstractDictFunctionsMixin, MutableAbstractItemAccessMixin
+from ultros.core.storage.config.base import MutableConfigFile
 
 __author__ = "Gareth Coles"
 
 
-class YAMLRoundtripConfig(MutableConfigFile, MutableItemAccessMixin, MutableDictFunctionsMixin):
+class YAMLRoundtripConfig(MutableConfigFile, MutableAbstractItemAccessMixin, MutableAbstractDictFunctionsMixin):
     """
     Class for YAML-based (roundtrip) configurations
     """

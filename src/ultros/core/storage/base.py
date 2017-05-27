@@ -12,7 +12,7 @@ from weakref import ref
 __author__ = "Gareth Coles"
 
 
-class StorageBase(metaclass=ABCMeta):
+class FileStorageBase(metaclass=ABCMeta):
     """
     Base class representing any storage file
 
@@ -73,7 +73,7 @@ class StorageBase(metaclass=ABCMeta):
             callback(self)
 
 
-class MutableStorageBase(StorageBase, AbstractContextManager, metaclass=ABCMeta):
+class MutableFileStorageBase(FileStorageBase, AbstractContextManager, metaclass=ABCMeta):
     """
     Base class representing any mutable storage file
 
@@ -106,7 +106,7 @@ class MutableStorageBase(StorageBase, AbstractContextManager, metaclass=ABCMeta)
                 self.save()
 
 
-class ItemAccessMixin(metaclass=ABCMeta):
+class AbstractItemAccessMixin(metaclass=ABCMeta):
     """
     A mixin providing abstract methods that are required for item-style data access
 
@@ -138,7 +138,7 @@ class ItemAccessMixin(metaclass=ABCMeta):
         """
 
 
-class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
+class MutableAbstractItemAccessMixin(AbstractItemAccessMixin, metaclass=ABCMeta):
     """
     A mixin providing abstract methods that are required for item-style data access and modification
 
@@ -158,7 +158,7 @@ class MutableItemAccessMixin(ItemAccessMixin, metaclass=ABCMeta):
         """
 
 
-class DictFunctionsMixin(metaclass=ABCMeta):
+class AbstractDictFunctionsMixin(metaclass=ABCMeta):
     """
     A mixin providing read-only abstract methods that mimic those that are provided by dicts by default
 
@@ -197,7 +197,7 @@ class DictFunctionsMixin(metaclass=ABCMeta):
         """
 
 
-class MutableDictFunctionsMixin(DictFunctionsMixin, metaclass=ABCMeta):
+class MutableAbstractDictFunctionsMixin(AbstractDictFunctionsMixin, metaclass=ABCMeta):
     """
     A mixin providing abstract methods that mimic those that are provided by dicts by default, including those that
     modify the dict

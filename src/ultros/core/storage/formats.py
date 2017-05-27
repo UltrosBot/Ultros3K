@@ -23,13 +23,11 @@ _ini_package = Packages(  # DRY
 
 # Constants for use in other packages that want to specify a format explicitly
 
-BIN = "bin"
 CONF = "conf"
 INI = "ini"
 JSON = "json"
 PYTHON = "py"
 TOML = "toml"
-TXT = "txt"
 YML = "yml"
 YML_ROUNDTRIP = "yml-roundtrip"
 
@@ -67,8 +65,6 @@ class FileFormats:
     +----------------+---------------------------+---------------+
     | Extension      | Format                    | Storage types |
     +================+===========================+===============+
-    | .bin           | Direct-access binary file | Data only     |
-    +----------------+---------------------------+---------------+
     | .conf          | INI                       | Config & Data |
     +----------------+---------------------------+---------------+
     | .ini           | INI                       | Config & Data |
@@ -79,8 +75,6 @@ class FileFormats:
     +----------------+---------------------------+---------------+
     | .toml          | TOML                      | Config & Data |
     +----------------+---------------------------+---------------+
-    | .txt           | Direct-access text file   | Data only     |
-    +----------------+---------------------------+---------------+
     | .yml           | YAML                      | Config & Data |
     +----------------+---------------------------+---------------+
     | .yml-roundtrip | YAML (round-trip parser)  | Config only   |
@@ -89,12 +83,6 @@ class FileFormats:
 
     def __init__(self):
         self._extensions = {
-            BIN: Packages(
-                "Binary File",
-                None,
-                "ultros.core.storage.data.binary"
-            ),
-
             CONF: _ini_package,
             INI: _ini_package,
 
@@ -114,12 +102,6 @@ class FileFormats:
                 "TOML",
                 "ultros.core.storage.config.toml",
                 "ultros.core.storage.data.toml"
-            ),
-
-            TXT: Packages(
-                "Text File",
-                None,
-                "ultros.core.storage.data.text"
             ),
 
             YML: Packages(

@@ -8,15 +8,14 @@ import toml
 
 from typing import Any, List, Dict
 
-from ultros.core.storage.base import ItemAccessMixin, DictFunctionsMixin
-from ultros.core.storage.config.base import ConfigFile
-
 from ultros.core.storage import manager as m
+from ultros.core.storage.base import AbstractItemAccessMixin, AbstractDictFunctionsMixin
+from ultros.core.storage.config.base import ConfigFile
 
 __author__ = "Gareth Coles"
 
 
-class TOMLConfig(ConfigFile, ItemAccessMixin, DictFunctionsMixin):
+class TOMLConfig(ConfigFile, AbstractItemAccessMixin, AbstractDictFunctionsMixin):
     """
     Class for TOML-based configurations
     """
