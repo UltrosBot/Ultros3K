@@ -3,9 +3,13 @@
 __author__ = "Gareth Coles"
 
 
-class UnknownFormatError(Exception):
+class StorageManagerError(Exception):
     pass
 
 
-class UnsupportedFormatError(Exception):
+class UnknownFormatError(StorageManagerError):
+    pass
+
+
+class UnsupportedFormatError(StorageManagerError):
     pass
