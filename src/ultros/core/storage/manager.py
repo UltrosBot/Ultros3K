@@ -15,6 +15,7 @@ import os
 
 from typing import Optional, Any, Dict, List, Union
 
+from tests.storage.exceptions import UnknownFormatError, UnsupportedFormatError
 from ultros.core import ultros as u
 
 from ultros.core.storage.base import FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, \
@@ -99,7 +100,7 @@ class StorageManager:
     def get_config(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                    defaults_path: Optional[Union[str, bool]]=None,
                    *args: List[Any], **kwargs: Dict[Any, Any]
-                   ) -> Optional[FileStorageBase]:
+                   ) -> FileStorageBase:
         """
         Attempts to load a config file (if it isn't already loaded) and
         returns it to you.
@@ -126,13 +127,14 @@ class StorageManager:
         :param args: Extra arguments to pass to the underlying storage object
         :param kwargs: Extra keyword arguments to pass to the underlying
                        storage object
-        :return: A storage object, or None if the format isn't found or
-                 doesn't support config files, or the file isn't found and an
-                 invalid value is supplied for defaults_path (these will be
-                 exceptions later)
-        """  # TODO: Edit this when we use exceptions
+        :return: A storage object
+        :raises UnknownFormatError: When there are no matching supported formats
+        :raises UnsupportedFormatError: When the matching format doesn't support config files
+        :raises ValueError: For invalid values for `default`
+        """
 
         # TODO: Modify path based on owner
+        # TODO: Logging
 
         if path in self.config_files:
             # File already loaded at some point
@@ -144,17 +146,17 @@ class StorageManager:
             _fmt = self.file_formats.get_format_from_path(fmt)
 
         if _fmt is None:  # No idea what that extension is
-            return  # TODO: Exception
+            raise UnknownFormatError("Unknown format for '{}'/'{}'".format(path, fmt))
 
         _fmt = _fmt.config
 
         if _fmt is None:  # Format doesn't support config files
-            return  # TODO: Exception (using fmt.name)
+            raise UnsupportedFormatError("Format '{}' does not support config files".format(_fmt.name))
 
         format_cls = self.get_class(_fmt)
 
         try:
-            obj = format_cls(owner, self, path, *args, **kwargs)  # TODO: Params
+            obj = format_cls(owner, self, path, *args, **kwargs)
             obj.load()
         except FileNotFoundError:  # Handle default config files
             if defaults_path is None:
@@ -170,7 +172,10 @@ class StorageManager:
                     defaults_path=False, *args, **kwargs
                 )
             else:
-                pass  # TODO: Exception
+                raise ValueError(
+                    "'defaults' must be None (Try again by appending '.default'), False (Don't load a default file), "
+                    "or a string (Specify the path to a default file)"
+                )
 
         else:
             self.config_files[path] = obj
@@ -179,7 +184,7 @@ class StorageManager:
 
     def get_data(self, path: str, owner: Any=None, fmt: Optional[str]=None,
                  *args: List[Any], **kwargs: Dict[Any, Any]
-                 ) -> Optional[MutableFileStorageBase]:
+                 ) -> MutableFileStorageBase:
         """
         Attempts to load a data file (if it isn't already loaded) and
         returns it to you.
@@ -195,11 +200,13 @@ class StorageManager:
         :param args: Extra arguments to pass to the underlying storage object
         :param kwargs: Extra keyword arguments to pass to the underlying
                        storage object
-        :return: A storage object, or None if the format isn't found or
-                 doesn't support config files (these will be exceptions later)
-        """  # TODO: Edit this when we use exceptions
+        :return: A storage object
+        :raises UnknownFormatError: When there are no matching supported formats
+        :raises UnsupportedFormatError: When the matching format doesn't support data files
+        """
 
         # TODO: Modify path based on owner
+        # TODO: Logging
 
         if path in self.data_files:
             # File already loaded at some point
@@ -211,15 +218,15 @@ class StorageManager:
             _fmt = self.file_formats.get_format_from_path(fmt)
 
         if _fmt is None:  # No idea what that extension is
-            return  # TODO: Exception
+            raise UnknownFormatError("Unknown format for '{}'/'{}'".format(path, fmt))
 
         _fmt = _fmt.data
 
         if _fmt is None:  # Format doesn't support data files
-            return  # TODO: Exception (using fmt.name)
+            raise UnsupportedFormatError("Format '{}' does not support data files".format(_fmt.name))
 
         format_cls = self.get_class(_fmt)
-        obj = format_cls(owner, self, path, *args, **kwargs)  # TODO: Params
+        obj = format_cls(owner, self, path, *args, **kwargs)
         obj.load()
 
         self.data_files[path] = obj
@@ -228,7 +235,7 @@ class StorageManager:
 
     def get_database(self, url: str, owner: Any=None, fmt: str="sqlalchemy",
                      *args: List[Any], **kwargs: Dict[Any, Any]
-                     ) -> Optional[DatabaseStorageBase]:
+                     ) -> DatabaseStorageBase:
         """
         Attempts to load a database abstraction (if it wasn't already loaded) and returns it to you.
 
@@ -242,8 +249,11 @@ class StorageManager:
                     databases
         :param args: Extra arguments to pass to the underlying storage object
         :param kwargs: Extra keyword arguments to pass to the underlying storage object
-        :return:A storage object, or None if the format isn't found (these will be exceptions later)
-        """  # TODO: Edit this when we use exceptions
+        :return: A storage object
+        :raises UnknownFormatError: When there are no matching supported formats
+        """
+
+        # TODO: Logging
 
         if url in self.databases:
             return self.databases[url]
@@ -251,10 +261,10 @@ class StorageManager:
         _fmt = self.database_formats.get_format(fmt)
 
         if _fmt is None:  # No idea what that database format is
-            return  # TODO: Exception
+            raise UnknownFormatError("Unknown format for '{}'".format(fmt))
 
         format_cls = self.get_class(_fmt)
-        obj = format_cls(owner, self, url, *args, **kwargs)  # TODO: Params
+        obj = format_cls(owner, self, url, *args, **kwargs)
         obj.load()
 
         self.databases[url] = obj
@@ -268,7 +278,19 @@ class StorageManager:
         :param path: The path of the file to unload
         :return: True if the file was unloaded (it was loaded), False otherwise
         """
-        pass
+
+        if path in self.data_files:
+            try:
+                self.data_files[path].unload()
+            except Exception as e:  # TODO: Logging
+                print("Failed to unload data file {} properly: {} - errors may occur!".format(path, e))
+            else:
+                print("Unloaded data file: {}".format(path))
+
+            del self.data_files[path]
+
+            return True
+        return False
 
     def unload_config(self, path: str) -> bool:
         """
@@ -277,16 +299,40 @@ class StorageManager:
         :param path: The path of the file to unload
         :return: True if the file was unloaded (it was loaded), False otherwise
         """
-        pass
 
-    def unload_database(self, path: str) -> bool:
+        if path in self.config_files:
+            try:
+                self.config_files[path].unload()
+            except Exception as e:  # TODO: Logging
+                print("Failed to unload config file {} properly: {} - errors may occur!".format(path, e))
+            else:
+                print("Unloaded config file: {}".format(path))
+
+            del self.config_files[path]
+
+            return True
+        return False
+
+    def unload_database(self, url: str) -> bool:
         """
         This function has not been finalized yet.
 
-        :param path:
+        :param url:
         :return:
         """
-        pass
+
+        if url in self.databases:
+            try:
+                self.databases[url].unload()
+            except Exception as e:  # TODO: Logging
+                print("Failed to unload database {} properly: {} - errors may occur!".format(url, e))
+            else:
+                print("Unloaded database: {}".format(url))
+
+            del self.databases[url]
+
+            return True
+        return False
 
     def unload_for_owner(self, owner: Any) -> bool:
         """
@@ -297,17 +343,45 @@ class StorageManager:
         :param owner: The owning object to unload storage objects for
         :return: Whether any files were unloaded
         """
+
+        # TODO: Logging
+
         if owner is None:
             return False
 
-        pass
+        unloaded = False
+
+        for path, obj in self.config_files.copy().items():
+            if obj.owner is owner:
+                if self.unload_config(path):
+                    unloaded = True
+
+        for path, obj in self.data_files.copy().items():
+            if obj.owner is owner:
+                if self.unload_data(path):
+                    unloaded = True
+
+        for url, obj in self.databases.copy().items():
+            if obj.owner is owner:
+                if self.unload_database(url):
+                    unloaded = True
+
+        return unloaded
 
     def unload_all(self):
         """
         Unload every file currently loaded by this manager. This should always
         be called to clean up when you're done with the manager.
         """
-        pass
+
+        for path, obj in self.config_files.copy().items():
+            self.unload_config(path)
+
+        for path, obj in self.data_files.copy().items():
+            self.unload_data(path)
+
+        for url, obj in self.databases.copy().items():
+            self.unload_database(url)
 
     def get_class(self, package: str) -> Union[type(FileStorageBase), type(DatabaseStorageBase), None]:
         """
