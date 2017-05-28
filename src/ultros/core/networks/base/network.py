@@ -11,8 +11,7 @@ __author__ = "Gareth Coles"
 class BaseNetwork:
     def __init__(self):
         self._servers = {}  #: Dict[str, BaseServer]
-        self._connectors = []  #: List[BaseConnector]
-        self._connector_associations = {}  #: Dict[str, List[BaseConnector]]
+        self._connectors = {}  #: Dict[str, List[BaseConnector]]
 
     def notify_connected(self, connector: "base.BaseConnector"):
         for server in self.get_servers_for_connector(connector):
@@ -33,7 +32,7 @@ class BaseNetwork:
             -> Set["base_server.BaseServer"]:
         servers = set()
 
-        for server_name, connector_list in self._connector_associations.items():
+        for server_name, connector_list in self._connectors.items():
             if connector in connector_list and self.has_server(server_name):
                 servers.add(self.get_server(server_name))
 
