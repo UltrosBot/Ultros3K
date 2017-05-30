@@ -12,13 +12,12 @@ __author__ = "Gareth Coles"
 __version__ = "0.0.1"
 
 
-def start(args):
-    u = Ultros(args.config, args.data)
-    # Gonna have to be a coroutine if we're AIO-based. Probably.
-    asyncio.get_event_loop().run_until_complete(u.start)
+def start(arguments):
+    u = Ultros(arguments.config, arguments.data)
+    u.start()
 
 
-def init(args):
+def init(arguments):
     pass
 
 
