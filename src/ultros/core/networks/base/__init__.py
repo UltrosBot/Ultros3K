@@ -12,7 +12,7 @@ Modules
     :toctree: base
 
     connectors
-    network
+    networks
     servers
 """
 
