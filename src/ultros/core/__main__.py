@@ -1,6 +1,6 @@
 # coding=utf-8
 import argparse
-import asyncio
+import logging
 
 from ultros.core.ultros import Ultros
 
@@ -13,8 +13,14 @@ __version__ = "0.0.1"
 
 
 def start(arguments):
+    logging.basicConfig(  # TODO: Proper logging
+        format="%(asctime)s | %(levelname)-8s | %(name)-10s | %(message)s",
+        level=logging.DEBUG if arguments.debug else logging.INFO
+    )
+
     u = Ultros(arguments.config, arguments.data)
-    u.start()
+    u.setup()
+    u.run()
 
 
 def init(arguments):
@@ -35,6 +41,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data", help="specify a directory to store data files",
         default="./data"
+    )
+    parser.add_argument(
+        "--debug", help="Enable debug output", action="store_true"
     )
 
     subparsers = parser.add_subparsers()

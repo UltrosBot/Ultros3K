@@ -1,5 +1,9 @@
 # coding=utf-8
 import asyncio
+import logging
+import signal
+
+import sys
 
 from ultros.core.events import manager as event_manager
 from ultros.core.networks import manager as network_manager
@@ -27,8 +31,25 @@ class Ultros:
     plugin_manager = None
     storage_manager = None
 
-    def __init__(self, config_dir: str, data_dir: str):
-        self.event_loop = None
+    def __init__(self, config_dir: str, data_dir: str, event_loop=None):
+        self.do_stop = False
+
+        # TODO: Proper logging
+        self.log = logging.getLogger("Ultros")
+
+        if not event_loop:
+            try:
+                import uvloop
+                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+                self.log.debug("Found uvloop; using for default event loop policy")
+            except Exception as e:
+                self.log.debug("Unable to import uvloop; using default asyncio event loop policy: {}".format(e))
+
+            event_loop = asyncio.get_event_loop()
+
+        self.event_loop = event_loop
+
+        self.log.info("Starting up...")
 
         # Load order is important
         self.storage_manager = storage_manager.StorageManager(
@@ -39,7 +60,16 @@ class Ultros:
         self.plugin_manager = plugin_manager.PluginManager(self)
         self.network_manager = network_manager.NetworkManager(self)
 
-    def shutdown(self):
+        signal.signal(signal.SIGINT, self._sigint)
+
+    def _sigint(self, *_):
+        print("")
+        self.log.debug("SIGINT caught.")
+        asyncio.run_coroutine_threadsafe(self.shutdown(), self.event_loop)
+
+    async def shutdown(self):
+        self.log.info("Shutting down...")
+
         if self.storage_manager:
             try:
                 self.storage_manager.shutdown()
@@ -72,12 +102,14 @@ class Ultros:
 
             self.plugin_manager = None
 
-        if self.event_loop:
+        if self.do_stop:
             self.event_loop.stop()
+            self.event_loop.close()
 
-    def start(self, own_event_loop=True):
+    def setup(self):
         # TODO
+        pass
 
-        if own_event_loop:
-            self.event_loop = asyncio.get_event_loop()
-            self.event_loop.run_forever()
+    def run(self):
+        self.do_stop = True
+        self.event_loop.run_forever()
