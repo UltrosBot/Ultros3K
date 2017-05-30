@@ -1,0 +1,11 @@
+machine:
+  python:
+    version: 3.6.1
+dependencies:
+  override:
+  - pip install -r requirements.txt
+  - pip install -r requirements-doc.txt
+  - pip install -r requirements-test.txt
+test:
+  override:
+  - nosetests tests/
