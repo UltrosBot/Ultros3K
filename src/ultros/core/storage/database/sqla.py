@@ -63,7 +63,6 @@ class SQLADatabase(RelationalDatabase):
         self.metadata = MetaData()
 
     def unload(self):
-        self.engine.dispose()
         self.metadata.clear()
 
         self.engine = None
