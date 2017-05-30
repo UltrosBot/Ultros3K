@@ -1,4 +1,5 @@
 # coding=utf-8
+import asyncio
 
 from ultros.core.events import manager as event_manager
 from ultros.core.networks import manager as network_manager
@@ -27,14 +28,16 @@ class Ultros:
     storage_manager = None
 
     def __init__(self, config_dir: str, data_dir: str):
+        self.event_loop = None
+
         # Load order is important
         self.storage_manager = storage_manager.StorageManager(
             self, config_dir, data_dir
         )
 
         self.event_manager = event_manager.EventManager(self)
-        self.network_manager = network_manager.NetworkManager(self)
         self.plugin_manager = plugin_manager.PluginManager(self)
+        self.network_manager = network_manager.NetworkManager(self)
 
     def shutdown(self):
         if self.storage_manager:
@@ -69,5 +72,12 @@ class Ultros:
 
             self.plugin_manager = None
 
-    async def start(self):
-        pass  # TODO
+        if self.event_loop:
+            self.event_loop.stop()
+
+    def start(self, own_event_loop=True):
+        # TODO
+
+        if own_event_loop:
+            self.event_loop = asyncio.get_event_loop()
+            self.event_loop.run_forever()
