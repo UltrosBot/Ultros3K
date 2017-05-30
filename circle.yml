@@ -1,11 +1,14 @@
+# Custom CircleCI Config
+# https://circleci.com/docs/1.0/configuration/
+
 machine:
   python:
-    version: 3.6.1
+    version: "3.6.1"
 dependencies:
   override:
-  - pip install -r requirements.txt
-  - pip install -r requirements-doc.txt
-  - pip install -r requirements-test.txt
+  - "pip install -r requirements.txt"
+  - "pip install -r requirements-doc.txt"
+  - "pip install -r requirements-test.txt"
 test:
   override:
-  - nosetests tests/
+  - "nosetests tests/"
