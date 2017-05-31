@@ -21,6 +21,9 @@ class StorageBase:
     instead.
     """
 
+    def set_owner(self, owner):
+        self._owner = ref(owner)
+
     @property
     def owner(self):
         return self._owner()

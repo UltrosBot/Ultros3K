@@ -9,7 +9,7 @@ from typing import Optional, Set
 
 from ultros.core.networks.base.connectors import base as base_connector
 from ultros.core.networks.base.servers import base as base_server
-
+from ultros.core.storage.config.base import ConfigFile
 
 __author__ = "Gareth Coles"
 
@@ -17,8 +17,11 @@ __author__ = "Gareth Coles"
 class BaseNetwork(metaclass=ABCMeta):
     type = "base"  #: str: The type of network, eg "irc"
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, config: ConfigFile):
         self.name = name
+        self.config = config
+
+        self.config.set_owner(self)
 
         self._servers = {}  #: Dict[str, BaseServer]
         self._connectors = {}  #: Dict[str, BaseConnector]
