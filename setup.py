@@ -19,5 +19,6 @@ setup(
     install_requires=open(
         "requirements.txt"
     ).read().replace("\r", "").split("\n"),
+    extras_require={"uvloop": "uvloop"},
     namespace_packages=["ultros", "ultros.networks", "ultros.plugins"]
 )
