@@ -3,13 +3,14 @@
 """
 Base class to be inherited by all networks
 """
-
 from abc import ABCMeta, abstractmethod
-from typing import Optional, Set
+from typing import Optional
+from weakref import ref
 
 from ultros.core.networks.base.connectors import base as base_connector
 from ultros.core.networks.base.servers import base as base_server
 from ultros.core.storage.config.base import ConfigFile
+from ultros.core import ultros as u
 
 __author__ = "Gareth Coles"
 
@@ -17,7 +18,8 @@ __author__ = "Gareth Coles"
 class BaseNetwork(metaclass=ABCMeta):
     type = "base"  #: str: The type of network, eg "irc"
 
-    def __init__(self, name: str, config: ConfigFile):
+    def __init__(self, name: str, config: ConfigFile, ultros: "u.Ultros"):
+        self._ultros = ref(ultros)
         self.name = name
         self.config = config
 
@@ -27,6 +29,10 @@ class BaseNetwork(metaclass=ABCMeta):
         self._connectors = {}  #: Dict[str, BaseConnector]
 
         self._connector_associations = {}  #: Dict[str, List[BaseConnector]]
+
+    @property
+    def ultros(self) -> "u.Ultros":
+        return self._ultros()
 
     @abstractmethod
     async def setup(self):

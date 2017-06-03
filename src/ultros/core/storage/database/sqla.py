@@ -42,7 +42,7 @@ class SQLADatabase(RelationalDatabase):
     ...         result = await conn.execute(users.select(user.c.name.startswith("H")))
     ...         d_users = await result.fetchall()
     ...     for user in d_users:
-    ...         logger.info("User: {}".format(user[users.c.name]))
+    ...         logger.info("User: %s", user[users.c.name])
     >>>
 
     For more information on this, you can check out the SQLAlchemy documentation, the documentation for

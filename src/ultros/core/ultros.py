@@ -56,7 +56,7 @@ class Ultros:
                 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
                 self.log.debug("Found uvloop; using for default event loop policy")
             except Exception as e:
-                self.log.debug("Unable to import uvloop; using default asyncio event loop policy: {}".format(e))
+                self.log.debug("Unable to import uvloop; using default asyncio event loop policy: %s", e)
 
             event_loop = asyncio.get_event_loop()
 
@@ -162,8 +162,8 @@ class Ultros:
         instantiated.
         """
 
-        # TODO
-        pass
+        self.network_manager.load_networks()
+        asyncio.run_coroutine_threadsafe(self.network_manager.connect_all(), self.event_loop)
 
     def run(self):
         """

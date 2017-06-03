@@ -14,6 +14,8 @@ import inspect
 import os
 from typing import Optional, Any, Dict, List, Union
 
+import logging
+
 from ultros.core import ultros as u
 
 from ultros.core.storage.base import FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, \
@@ -76,6 +78,8 @@ class StorageManager:
         :param config_location: Path to a directory for config files
         :param data_location: Path to a directory for data files
         """
+
+        self.log = logging.getLogger("Storage")  # TODO: Proper logging
         self.ultros = ultros
 
         self.config_location = os.path.normpath(config_location)
@@ -91,7 +95,7 @@ class StorageManager:
         try:
             self.unload_all()
         except Exception as e:
-            print(e)  # TODO: Logging
+            self.log.error("Error raised while unloading everything: %s", e)  # TODO: Logging
 
         self.ultros = None
 
@@ -176,6 +180,7 @@ class StorageManager:
                 )
 
         else:
+            self.log.debug("Loaded new config file: %s -> %s", path, obj)
             self.config_files[path] = obj
 
             return obj
@@ -227,6 +232,7 @@ class StorageManager:
         obj = format_cls(owner, self, path, *args, **kwargs)
         obj.load()
 
+        self.log.debug("Loaded new data file: %s -> %s", path, obj)
         self.data_files[path] = obj
 
         return obj
@@ -265,6 +271,7 @@ class StorageManager:
         obj = format_cls(owner, self, url, *args, **kwargs)
         obj.load()
 
+        self.log.debug("Loaded new database file: %s -> %s", url, obj)
         self.databases[url] = obj
 
         return obj
@@ -281,9 +288,9 @@ class StorageManager:
             try:
                 self.data_files[path].unload()
             except Exception as e:  # TODO: Logging
-                print("Failed to unload data file {} properly: {} - errors may occur!".format(path, e))
+                self.log.warning("Failed to unload data file %s properly: %s - errors may occur!", path, e)
             else:
-                print("Unloaded data file: {}".format(path))
+                self.log.debug("Unloaded data file: %s", path)
 
             del self.data_files[path]
 
@@ -302,9 +309,9 @@ class StorageManager:
             try:
                 self.config_files[path].unload()
             except Exception as e:  # TODO: Logging
-                print("Failed to unload config file {} properly: {} - errors may occur!".format(path, e))
+                self.log.warning("Failed to unload config file %s properly: %s - errors may occur!", path, e)
             else:
-                print("Unloaded config file: {}".format(path))
+                self.log.debug("Unloaded config file: %s", path)
 
             del self.config_files[path]
 
