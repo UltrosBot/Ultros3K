@@ -47,6 +47,12 @@ class EventManager:
         self.registered = {}
 
     def shutdown(self):
+        """
+        Clean up for Ultros shutdown.
+
+        Clears all event handlers and deletes the instance-level reference to the parent Ultros object.
+        """
+
         self.registered.clear()
         self.ultros = None
 
@@ -89,7 +95,7 @@ class EventManager:
           identifiers (if you happen to know it) or, preferably, pass in one of
           the superclasses you'd like to match. For example, if you wanted to
           match every event fired by a plugin, you might pass in
-          :code:`ultros.events.general.PluginEvent` here.
+          :code:`ultros.core.events.general.PluginEvent` here.
 
           * Passing in these classes is preferred as identifiers may change.
             If you pass in a class, the event manager will figure out the
@@ -97,11 +103,11 @@ class EventManager:
 
         * Event priorities serve as a way to decide which handlers get called
           first. If you don't care, you can omit one, but you can pass one in
-          if requred.
+          if required.
 
           * Event priorities are ordered from lowest to highest, using Python's
             standard sorting algorithm. You may pass in an
-            :code:`EventPriority` from :code:`ultros.events.constants`, or
+            :code:`EventPriority` from :code:`ultros.core.events.constants`, or
             provide an integer instead if that isn't fine-grained enough for
             you.
 
@@ -111,7 +117,6 @@ class EventManager:
         :param func: Your handler callable. This will be called when a matching
                      event is fired. It may be a standard callable, or a
                      coroutine as needed.
-
         :param priority: Dictates when your handler is called in relation to
                          other registered handlers that match the same event.
                          See above for more info on that.
@@ -165,15 +170,16 @@ class EventManager:
         :param priority: The event priority the handler was registered with.
         """
 
-        if identifier is None:
-            handler_dict = self.registered
-        else:
+        if identifier is not None:
             identifier = self._get_identifier(identifier)
-            handler_dict = {None: self.registered.get(identifier, {})}
 
-        for ident, handlers in handler_dict.items():
+        for ident, handlers in self.registered.items():
+            if identifier is not None and ident != identifier:
+                continue
+
             for x in range(len(handlers) - 1, -1, -1):
                 handler = handlers[x]
+
                 if handler["callable"] == func:
                     if priority is None or priority == handler["priority"]:
                         handlers.pop(x)
@@ -186,7 +192,7 @@ class EventManager:
         :param owner: The owning object to match against.
         """
 
-        for ident, handlers in self.registered.items():
+        for _, handlers in self.registered.items():
             for x in range(len(handlers) - 1, -1, -1):
                 handler = handlers[x]
                 if handler["owner"] == owner:
