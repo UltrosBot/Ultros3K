@@ -29,6 +29,13 @@ __author__ = "Gareth Coles"
 class Ultros:
     """
     The Ultros class. Home for all system-wide components.
+
+    :param config_dir: Directory containing configuration files
+    :param data_dir: Directory to contain data files
+    :param event_loop: Optionally, the event loop to work with. Omit this and the instance will create one itself,
+                       preferring `uvloop` if installed. If you don't want to use uvloop, pass in a loop yourself.
+    :param handle_signals: If you don't want SIGTERM, SIGINT and SIGBREAK handled automatically (eg, you have more
+                           than one Ultros instance), then set this to False.
     """
 
     event_manager = None
@@ -38,14 +45,6 @@ class Ultros:
 
     def __init__(self, config_dir: str, data_dir: str, event_loop: Optional[asyncio.BaseEventLoop]=None,
                  handle_signals: bool=True):
-        """
-        :param config_dir: Directory containing configuration files
-        :param data_dir: Directory to contain data files
-        :param event_loop: Optionally, the event loop to work with. Omit this and the instance will create one itself,
-                           preferring `uvloop` if installed. If you don't want to use uvloop, pass in a loop yourself.
-        :param handle_signals: If you don't want SIGTERM, SIGINT and SIGBREAK handled automatically (eg, you have more
-                               than one Ultros instance), then set this to False.
-        """
         self.do_stop = False
 
         # TODO: Proper logging
@@ -105,9 +104,6 @@ class Ultros:
         Note that we only get five seconds when this happens before the process is killed, so we should try
         to keep this process fast.
         """
-
-        # Windows-only - when someone tries to close their terminal.
-        # We only get 5 seconds to do this (which is hopefully enough), so keep an eye on shutdown times.
 
         self.log.debug("SIGBREAK caught.")
         asyncio.run_coroutine_threadsafe(self.shutdown(), self.event_loop)
