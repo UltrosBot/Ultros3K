@@ -48,7 +48,7 @@ class Ultros:
         self.do_stop = False
 
         # TODO: Proper logging
-        self.log = logging.getLogger("Ultros")
+        self.log = logging.getLogger(__name__)
 
         if not event_loop:
             try:

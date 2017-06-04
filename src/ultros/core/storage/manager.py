@@ -79,7 +79,7 @@ class StorageManager:
         :param data_location: Path to a directory for data files
         """
 
-        self.log = logging.getLogger("Storage")  # TODO: Proper logging
+        self.log = logging.getLogger(__name__)  # TODO: Proper logging
         self.ultros = ultros
 
         self.config_location = os.path.normpath(config_location)

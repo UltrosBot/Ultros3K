@@ -14,7 +14,7 @@ PACKAGE = "ultros.networks.{}.network"
 
 class NetworkManager:
     def __init__(self, ultros: "u.Ultros"):
-        self.log = logging.getLogger("Networks")  # TODO: Proper logging
+        self.log = logging.getLogger(__name__)  # TODO: Proper logging
         self.ultros = ultros
 
         self.networks = {}
