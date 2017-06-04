@@ -1,15 +1,4 @@
 # coding=utf-8
-import asyncio
-import logging
-import signal
-
-import sys
-from typing import Optional
-
-from ultros.core.events import manager as event_manager
-from ultros.core.networks import manager as network_manager
-from ultros.core.plugins import manager as plugin_manager
-from ultros.core.storage import manager as storage_manager
 
 """
 The Ultros class - encapsulation for what matters.
@@ -22,6 +11,17 @@ As we've moved away from our previous Singleton-bound implementation, some
 way to keep track of everything became necessary. This class will be passed
 around all over the place.
 """
+
+import asyncio
+import logging
+import signal
+
+from typing import Optional
+
+from ultros.core.events import manager as event_manager
+from ultros.core.networks import manager as network_manager
+from ultros.core.plugins import manager as plugin_manager
+from ultros.core.storage import manager as storage_manager
 
 __author__ = "Gareth Coles"
 
