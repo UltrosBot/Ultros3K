@@ -103,3 +103,6 @@ dist/
 # Namespace module content
 src/ultros/networks/*/**
 src/ultros/plugins/*/**
+
+# Generated distrib files
+files.zip
