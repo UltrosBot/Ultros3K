@@ -1,6 +1,7 @@
 # coding=utf-8
 import argparse
 import logging
+import os
 
 from ultros.core.ultros import Ultros
 
@@ -18,7 +19,10 @@ def start(arguments):
         level=logging.DEBUG if arguments.debug else logging.INFO
     )
 
-    u = Ultros(arguments.config, arguments.data)
+    config_dir = os.environ.get("ULTROS_CONFIG_DIR", arguments.config)
+    data_dir = os.environ.get("ULTROS_DATA_DIR", arguments.data)
+
+    u = Ultros(config_dir, data_dir)
     u.setup()
     u.run()
 

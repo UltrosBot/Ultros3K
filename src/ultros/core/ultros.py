@@ -14,6 +14,7 @@ around all over the place.
 
 import asyncio
 import logging
+import os
 import signal
 
 from typing import Optional
@@ -46,6 +47,8 @@ class Ultros:
     def __init__(self, config_dir: str, data_dir: str, event_loop: Optional[asyncio.BaseEventLoop]=None,
                  handle_signals: bool=True):
         self.do_stop = False
+        self.config_dir = config_dir
+        self.data_dir = data_dir
 
         # TODO: Proper logging
         self.log = logging.getLogger(__name__)
@@ -64,9 +67,12 @@ class Ultros:
 
         self.log.info("Starting up...")
 
+        self.log.info("Config dir: %s", os.path.abspath(self.config_dir))
+        self.log.info("Data dir: %s", os.path.abspath(self.data_dir))
+
         # Load order is important
         self.storage_manager = storage_manager.StorageManager(
-            self, config_dir, data_dir
+            self, self.config_dir, self.data_dir
         )
 
         self.event_manager = event_manager.EventManager(self)
