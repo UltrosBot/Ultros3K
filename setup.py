@@ -17,12 +17,12 @@ class BuildZipsCommand(Command):
     description = "Build zip of bundled config files"
 
     def run(self):
-        if os.path.exists("files.zip"):
-            print("Removing old 'files.zip'")
-            os.remove("files.zip")
+        if os.path.exists("config.zip"):
+            print("Removing old 'config.zip'")
+            os.remove("config.zip")
 
-        shutil.make_archive("files", "zip", "bundled_files/")
-        print("bundled_files/ -> files.zip")
+        shutil.make_archive("config", "zip", "config")
+        print("config/ -> config.zip")
 
     def initialize_options(self):
         pass
@@ -64,5 +64,5 @@ setup(
     ).read().replace("\r", "").split("\n"),
     extras_require={"uvloop": "uvloop"},
     namespace_packages=["ultros", "ultros.networks", "ultros.plugins"],
-    data_files=[("", ["files.zip"])]
+    data_files=[("", ["config.zip"])]
 )
