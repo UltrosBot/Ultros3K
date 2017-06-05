@@ -105,4 +105,4 @@ src/ultros/networks/*/**
 src/ultros/plugins/*/**
 
 # Generated distrib files
-files.zip
+config.zip
