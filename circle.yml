@@ -8,11 +8,24 @@ machine:
 dependencies:
   override:
   - "pip install -U -r requirements.txt"
+  - "pip install -U -r requirements-doc.txt"
   - "pip install -U -r requirements-test.txt"
 
 general:
   artifacts:
   - "cover/"
+  - "docs.zip"
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - ./.circle/deploy_docs.sh
+
+compile:
+  override:
+    - "python -m sphinx -b html -E ./doc/source ./doc/build/html"
+    - "zip -r docs.zip ./doc/build/html"
 
 test:
   pre:
