@@ -20,7 +20,8 @@ deployment:
   master:
     branch: master
     commands:
-      - ./.circle/deploy_docs.sh
+      - "chmod +x .circle/*"
+      - "./.circle/deploy_docs.sh"
 
 compile:
   override:
