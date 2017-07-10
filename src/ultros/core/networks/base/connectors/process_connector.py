@@ -2,8 +2,10 @@
 from abc import ABCMeta
 from asyncio import SubprocessProtocol
 
+from ultros.core.networks.base.connectors.base import BaseConnector
+
 __author__ = "Gareth Coles"
 
 
-class ProcessConnector(SubprocessProtocol, metaclass=ABCMeta):
+class ProcessConnector(BaseConnector, SubprocessProtocol, metaclass=ABCMeta):
     pass

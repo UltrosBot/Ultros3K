@@ -7,10 +7,12 @@ from abc import ABCMeta, abstractmethod
 from typing import Optional
 from weakref import ref
 
+import asyncio
+
 from ultros.core.networks.base.connectors import base as base_connector
 from ultros.core.networks.base.servers import base as base_server
 from ultros.core.storage.config.base import ConfigFile
-from ultros.core import ultros as u
+from ultros.core import main as u
 
 __author__ = "Gareth Coles"
 
@@ -53,7 +55,7 @@ class BaseNetwork(metaclass=ABCMeta):
             return  # TODO: Logging
 
         try:
-            server.connector_connected(connector)
+            asyncio.ensure_future(server.connector_connected(connector))
         except Exception as e:
             pass  # TODO: Logging
 
@@ -108,12 +110,15 @@ class BaseNetwork(metaclass=ABCMeta):
         self._connectors[connector.name] = connector
 
         if server:
-            self._connector_associations[server.name] = connector
+            if server.name not in self._connector_associations:
+                self._connector_associations[server.name] = [connector]
+            else:
+                self._connector_associations[server.name].append(connector)
 
     async def destroy_connector(self, connector: "base_connector.BaseConnector", remove_association=True):
         try:
-            await connector.disconnect()
-        except Exception as e:
+            await connector.do_disconnect()
+        except Exception:
             pass  # TODO: Logging
 
         del self._connectors[connector.name]

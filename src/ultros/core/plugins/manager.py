@@ -1,5 +1,5 @@
 # coding=utf-8
-from ultros.core import ultros as u
+from ultros.core import main as u
 
 __author__ = "Gareth Coles"
 

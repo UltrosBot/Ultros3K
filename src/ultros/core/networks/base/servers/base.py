@@ -3,6 +3,8 @@ from abc import ABCMeta, abstractmethod
 from typing import Optional
 from weakref import ref
 
+from logging import getLogger
+
 from ultros.core.networks.base.connectors import base as base_connector
 from ultros.core.networks.base.networks import base as base_network
 
@@ -13,6 +15,7 @@ class BaseServer(metaclass=ABCMeta):
     def __init__(self, name: str, network: "base_network.BaseNetwork"):
         self.name = name
         self._network = ref(network)
+        self.logger = getLogger("Server: {}".format(self.name))  # TODO: Logging
 
     @property
     def network(self) -> "base_network.BaseNetwork":

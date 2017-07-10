@@ -9,7 +9,7 @@ from asyncio.coroutines import iscoroutinefunction, _CoroutineABC
 from operator import itemgetter
 from typing import Callable, Union, Optional
 
-from ultros.core import ultros as u
+from ultros.core import main as u
 from ultros.core.events.constants import EventPriority
 from ultros.core.events.definitions.general import Event
 

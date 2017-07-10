@@ -5,7 +5,7 @@ import logging
 
 from typing import Optional
 
-from ultros.core import ultros as u
+from ultros.core import main as u
 from ultros.core.networks.base.networks.base import BaseNetwork
 
 __author__ = "Gareth Coles"
@@ -45,10 +45,13 @@ class NetworkManager:
 
     def _load_network(self, name) -> Optional[BaseNetwork]:
         self.log.info("Loading network: %s", name)
+        config_file = "networks/{}.yml".format(name)
 
-        config = self.ultros.storage_manager.get_config(
-            "networks/{}.yml".format(name)
-        )
+        try:
+            config = self.ultros.storage_manager.get_config(config_file)
+        except FileNotFoundError:
+            self.log.error("File not found: {}".format(config_file))
+            return None
 
         network_cls = self._get_class(config["type"])
 

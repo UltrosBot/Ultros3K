@@ -5,7 +5,7 @@ import os
 import shutil
 import zipfile
 
-from ultros.core.ultros import Ultros
+from ultros.core.main import Ultros
 
 """
 Ultros - Module runnable

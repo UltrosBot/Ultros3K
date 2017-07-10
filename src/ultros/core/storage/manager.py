@@ -16,7 +16,7 @@ from typing import Optional, Any, Dict, List, Union
 
 import logging
 
-from ultros.core import ultros as u
+from ultros.core import main as u
 
 from ultros.core.storage.base import FileStorageBase, MutableFileStorageBase, AbstractItemAccessMixin, \
     MutableAbstractItemAccessMixin, AbstractDictFunctionsMixin, MutableAbstractDictFunctionsMixin, StorageBase, \

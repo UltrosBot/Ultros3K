@@ -1,8 +1,9 @@
 # coding=utf-8
 from abc import ABCMeta, abstractmethod
-from asyncio import BaseTransport, BaseProtocol
-from typing import Optional
+from asyncio import BaseProtocol
 from weakref import ref
+
+from logging import getLogger
 
 from ultros.core.networks.base.networks import base as base_network
 from ultros.core.networks.base.servers import base as base_server
@@ -11,10 +12,11 @@ __author__ = "Gareth Coles"
 
 
 class BaseConnector(BaseProtocol, metaclass=ABCMeta):
-    transport = None  #: BaseTransport
+    transport = None
 
     def __init__(self, name: str, network: "base_network.BaseNetwork", server: "base_server.BaseServer"):
         self.name = name
+        self.logger = getLogger("Connector: {}".format(self.name))
 
         if server:
             self._server = ref(server)
