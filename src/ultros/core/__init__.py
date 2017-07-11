@@ -18,7 +18,7 @@ Modules
     plugins
     rules
     storage
-    ultros
+    main
 """
 
 __author__ = "Gareth Coles"

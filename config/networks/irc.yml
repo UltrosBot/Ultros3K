@@ -1,0 +1,9 @@
+type: "irc"
+
+nick: "UltrosBot"
+ident: "ultros"
+host: "irc.esper.net"
+port: 6667
+
+channels:
+- "#Ultros-test"

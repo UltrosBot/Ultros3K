@@ -1,1 +1,4 @@
-# Eventually, we'll have our main settings here...
+default_encoding: "UTF-8"
+
+networks:
+- "irc"
