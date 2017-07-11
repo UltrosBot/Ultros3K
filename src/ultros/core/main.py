@@ -44,8 +44,6 @@ class Ultros:
     plugin_manager = None
     storage_manager = None
 
-    config = {}
-
     def __init__(self, config_dir: str, data_dir: str, event_loop: Optional[asyncio.BaseEventLoop]=None,
                  handle_signals: bool=True):
         self.do_stop = False
@@ -80,6 +78,8 @@ class Ultros:
         self.event_manager = event_manager.EventManager(self)
         self.plugin_manager = plugin_manager.PluginManager(self)
         self.network_manager = network_manager.NetworkManager(self)
+
+        self.config = self.storage_manager.get_config("settings.yml", defaults_path=False)
 
         if handle_signals:
             signal.signal(signal.SIGINT, self._sigint)
@@ -169,8 +169,6 @@ class Ultros:
         This will parse configs, load plugins, and get networks connected. The managers however have already been
         instantiated.
         """
-        self.config = self.storage_manager.get_config("settings.yml", defaults_path=False)
-
         self.network_manager.load_networks()
         asyncio.run_coroutine_threadsafe(self.network_manager.connect_all(), self.event_loop)
 
