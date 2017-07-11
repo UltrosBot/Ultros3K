@@ -6,6 +6,6 @@ from ultros.networks.irc.connectors.base import BaseIRCConnector
 __author__ = "Gareth Coles"
 
 
-class PlainIRCConnector(BaseIRCConnector):
+class SSLIRCConnector(BaseIRCConnector):
     async def do_connect(self):
-        transport, _ = await asyncio.get_event_loop().create_connection(lambda: self, self.host, self.port)
+        transport, _ = await asyncio.get_event_loop().create_connection(lambda: self, self.host, self.port, ssl=True)

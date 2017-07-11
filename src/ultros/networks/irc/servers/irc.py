@@ -22,9 +22,10 @@ class IRCServer(BaseServer):
 
     async def connector_connected(self, connector):
         self._connector = ref(connector)
-        self.connector.transport.write(b"CAP LS 302\r\n")
-        self.connector.transport.write(b"NICK Testros\r\n")
-        self.connector.transport.write(b"USER test 0 * :Ultros 3K\r\n")
+
+        await self.connector.write_line("CAP LS 302")
+        await self.connector.write_line("NICK Testros")
+        await self.connector.write_line("USER test 0 * :Ultros 3K")
 
     async def connector_disconnected(self, connector, exc):
         pass
@@ -37,7 +38,7 @@ class IRCServer(BaseServer):
         )
 
     async def irc_PING(self, tags, prefix, command, params):
-        self.connector.transport.write(b"PONG :" + params[0].encode("UTF-8") + b"\r\n")
+        await self.connector.write_line("PONG :{}".format(params[0]))
 
     async def irc_CAP(self, tags, prefix, command, params):
         if params[0] == "*" and params[1] == "LS":
@@ -49,7 +50,7 @@ class IRCServer(BaseServer):
                     self.server_capabilities.append(cap)
 
                 self.logger.debug("Capabilities: {}".format(", ".join(self.server_capabilities)))
-                self.connector.transport.write(b"CAP END\r\n")
+                await self.connector.write_line("CAP END")
 
     async def irc_001(self, tags, prefix, command, params):
-        self.connector.transport.write(b"JOIN #ultros-test\r\n")
+        await self.connector.write_line("JOIN #ultros-test")

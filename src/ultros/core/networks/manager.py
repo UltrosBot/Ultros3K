@@ -23,7 +23,7 @@ class NetworkManager:
         self.ultros = None
 
     def load_networks(self):
-        config = self.ultros.storage_manager.get_config("settings.yml", defaults_path=False)
+        config = self.ultros.config
         network_list = config["networks"]
 
         if not network_list:
