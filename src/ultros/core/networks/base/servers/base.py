@@ -15,7 +15,7 @@ class BaseServer(metaclass=ABCMeta):
     def __init__(self, name: str, network: "base_network.BaseNetwork"):
         self.name = name
         self._network = ref(network)
-        self.logger = getLogger("Server: {}".format(self.name))  # TODO: Logging
+        self.logger = getLogger(self.name)  # TODO: Logging
 
     @property
     def network(self) -> "base_network.BaseNetwork":

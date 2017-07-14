@@ -16,7 +16,7 @@ class BaseConnector(BaseProtocol, metaclass=ABCMeta):
 
     def __init__(self, name: str, network: "base_network.BaseNetwork", server: "base_server.BaseServer"):
         self.name = name
-        self.logger = getLogger("Connector: {}".format(self.name))
+        self.logger = getLogger(self.name)
 
         if server:
             self._server = ref(server)
