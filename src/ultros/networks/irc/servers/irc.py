@@ -28,4 +28,3 @@ class IRCServer(BaseServer):
 
     async def connector_disconnected(self, connector, exc):
         pass
-
